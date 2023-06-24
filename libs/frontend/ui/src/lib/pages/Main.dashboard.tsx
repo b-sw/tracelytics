@@ -23,7 +23,7 @@ export const MainDashboard = () => {
     return (
         <Page>
             {/*{isMobile ? <MobileMenu /> : <Sidebar />}*/}
-
+            asdasd
             <Flex mt={['12vh', 0]} flexGrow={1}>
                 <Spacer />
                 {routes}

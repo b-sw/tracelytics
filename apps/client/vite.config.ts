@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import viteTsConfigPaths from 'vite-tsconfig-paths';
 
@@ -23,6 +24,13 @@ export default defineConfig({
         }),
     ],
 
+    resolve: {
+        alias: {
+            '@tracelytics/frontend/domain': resolve('libs/frontend/domain/src/index.ts'),
+            '@tracelytics/frontend/ui': resolve('libs/frontend/ui/src/index.ts'),
+            '@tracelytics/shared/types': resolve('libs/shared/types/src/index.ts'),
+        },
+    },
     // Uncomment this if you are using workers.
     // worker: {
     //  plugins: [
