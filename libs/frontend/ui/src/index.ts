@@ -1,1 +1,1 @@
-export * from './lib/frontend-ui';
+export * from './lib/pages';

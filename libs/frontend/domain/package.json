@@ -1,5 +1,5 @@
 {
-    "name": "@tracelytics/shared/types",
+    "name": "@tracelytics/frontend/domain",
     "version": "0.0.1",
     "type": "commonjs"
 }
