@@ -1,6 +1,6 @@
 import { Avatar, Badge, Divider, Flex, IconButton, Spacer, Text } from '@chakra-ui/react';
 import { Path } from '@tracelytics/frontend/domain';
-import { FaDumbbell } from 'react-icons/fa';
+import { FaTimeline } from 'react-icons/fa6';
 import { MdBarChart, MdLogout } from 'react-icons/md';
 import { NavigationButton } from './Navigation.button';
 
@@ -23,8 +23,8 @@ export const Sidebar = () => {
             <Divider style={{ borderWidth: '2px' }} my={5} />
 
             <Flex direction={'column'} gap={5}>
-                <NavigationButton path={Path.ANALYTICS} icon={FaDumbbell} description={'Analytics'} />
-                <NavigationButton path={Path.EVENTS} icon={MdBarChart} description={'Events'} />
+                <NavigationButton path={Path.ANALYTICS} icon={MdBarChart} description={'Analytics'} />
+                <NavigationButton path={Path.EVENTS} icon={FaTimeline} description={'Events'} />
             </Flex>
 
             <Spacer />
