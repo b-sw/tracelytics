@@ -3,18 +3,18 @@ import { Path } from '@tracelytics/frontend/domain';
 import { useMemo } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Page } from '../generic/Page';
+import { Sidebar } from '../sidebar/Sidebar';
+import { AnalyticsPage } from './analytics/Analytics.page';
+import { EventsPage } from './events/Events.page';
 
 export const MainDashboard = () => {
     const routes = useMemo(
         () => (
             <Routes>
-                {/*<Route path={Path.TRAININGS} element={<TrainingsDashboard />} />*/}
-                {/*<Route path={Path.STANDINGS} element={<StandingsDashboard />} />*/}
-                {/*<Route path={Path.WINNERS} element={<WinnersDashboard />} />*/}
-                {/*<Route element={<RequireAuthRouteAdmin />}>*/}
-                {/*    <Route path={Path.TEAMS} element={<TeamsDashboard />} />*/}
-                {/*</Route>*/}
-                <Route path="*" element={<Navigate to={Path.LANDING_PAGE} replace />} />
+                <Route path="*" element={<Navigate to={Path.DASHBOARD} replace />} />
+
+                <Route path={Path.ANALYTICS} element={<AnalyticsPage />} />
+                <Route path={Path.EVENTS} element={<EventsPage />} />
             </Routes>
         ),
         [],
@@ -22,8 +22,7 @@ export const MainDashboard = () => {
 
     return (
         <Page>
-            {/*{isMobile ? <MobileMenu /> : <Sidebar />}*/}
-            asdasd
+            <Sidebar />
             <Flex mt={['12vh', 0]} flexGrow={1}>
                 <Spacer />
                 {routes}
