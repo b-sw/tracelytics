@@ -1,0 +1,34 @@
+{
+    "name": "frontend-states",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/frontend/states/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nx/js:swc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/libs/frontend/states",
+                "main": "libs/frontend/states/src/index.ts",
+                "tsConfig": "libs/frontend/states/tsconfig.lib.json",
+                "assets": ["libs/frontend/states/*.md"]
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/frontend/states/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nx/vite:test",
+            "outputs": ["coverage/libs/frontend/states"],
+            "options": {
+                "passWithNoTests": true,
+                "reportsDirectory": "../../../coverage/libs/frontend/states"
+            }
+        }
+    },
+    "tags": []
+}
