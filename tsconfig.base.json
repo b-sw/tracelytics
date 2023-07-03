@@ -17,7 +17,6 @@
         "paths": {
             "@tracelytics/backend/auth": ["libs/backend/auth/src/index.ts"],
             "@tracelytics/frontend/domain": ["libs/frontend/domain/src/index.ts"],
-            "@tracelytics/frontend/states": ["libs/frontend/states/src/index.ts"],
             "@tracelytics/frontend/ui": ["libs/frontend/ui/src/index.ts"],
             "@tracelytics/shared/di": ["libs/shared/di/src/index.ts"],
             "@tracelytics/shared/flux": ["libs/shared/flux/src/index.ts"],
