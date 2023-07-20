@@ -17,12 +17,12 @@ if (swcJestConfig.swcrc === undefined) {
 // swcJestConfig.module.noInterop = false;
 
 export default {
-    displayName: 'frontend-states',
+    displayName: 'frontend-application',
     preset: '../../../jest.preset.js',
     transform: {
-        '^.+\\.[tj]sx$': ['@swc/jest', swcJestConfig],
+        '^.+\\.[tj]s$': ['@swc/jest', swcJestConfig],
     },
-    moduleFileExtensions: ['ts', 'js', 'html', 'tsx'],
+    moduleFileExtensions: ['ts', 'js', 'html'],
     testEnvironment: 'jsdom',
-    coverageDirectory: '../../../coverage/libs/frontend/states',
+    coverageDirectory: '../../../coverage/libs/frontend/application',
 };

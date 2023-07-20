@@ -7,7 +7,8 @@
 		"build:client": "nx run client:build",
 		"start:api": "nx run api:serve",
 		"build:api": "nx run api:build",
-		"test:affected": "nx affected -t test"
+		"test:affected": "nx affected -t test",
+		"test:all": "nx run-many --target=test"
 	},
 	"private": true,
 	"dependencies": {

@@ -1,5 +1,6 @@
 import { Class } from '@tracelytics/shared/types';
 import { injectable } from 'inversify';
+import 'reflect-metadata';
 import { filter, Observable, Subject } from 'rxjs';
 
 export class DispatcherAction {
