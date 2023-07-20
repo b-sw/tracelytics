@@ -1,33 +1,69 @@
-import { SetCalendarDateRangeAction } from '@tracelytics/frontend/application';
-import { CalendarState as CalendarStateModel, DateRange } from '@tracelytics/frontend/domain';
+import {
+    ChangeCalendarDaysAction,
+    ChangeCalendarMonthAction,
+    ChangeCalendarSelectedDateRangeAction,
+    ChangeCalendarSwitchDirectionAction,
+} from '@tracelytics/frontend/application';
+import { CalendarState as CalendarStateModel, DateRange, SwitchDirection } from '@tracelytics/frontend/domain';
 import { Dispatcher } from '@tracelytics/shared/flux';
-import dayjs from 'dayjs';
+import { getMonthDays } from '@tracelytics/shared/utils';
+import dayjs, { Dayjs } from 'dayjs';
 import { injectable } from 'inversify';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @injectable()
 export class CalendarState implements CalendarStateModel {
     static readonly DEFAULT_STATE = {
+        switchDirection: null,
         dateRange: {
             start: dayjs().startOf('day'),
             end: dayjs().endOf('day'),
         },
+        currentMonth: dayjs().startOf('month'),
+        currentMonthDays: getMonthDays(dayjs()),
     };
 
-    #dateRange$ = new BehaviorSubject<DateRange>(CalendarState.DEFAULT_STATE.dateRange);
+    #switchDirection$ = new BehaviorSubject<SwitchDirection | null>(CalendarState.DEFAULT_STATE.switchDirection);
+    #selectedDateRange$ = new BehaviorSubject<DateRange>(CalendarState.DEFAULT_STATE.dateRange);
+    #currentMonth$ = new BehaviorSubject<Dayjs>(CalendarState.DEFAULT_STATE.currentMonth);
+    #currentMonthDays$ = new BehaviorSubject<Dayjs[]>(CalendarState.DEFAULT_STATE.currentMonthDays);
 
     constructor(private readonly _dispatcher: Dispatcher) {
-        this.#dateRange$.next(CalendarState.DEFAULT_STATE.dateRange);
-        this._dispatcher.on(SetCalendarDateRangeAction).subscribe((action) => {
-            this.#dateRange$.next(action.payload);
+        this._dispatcher.on(ChangeCalendarSwitchDirectionAction).subscribe((action) => {
+            this.#switchDirection$.next(action.payload.switchDirection);
+        });
+        this._dispatcher.on(ChangeCalendarSelectedDateRangeAction).subscribe((action) => {
+            this.#selectedDateRange$.next(action.payload.newDateRange);
+        });
+        this._dispatcher.on(ChangeCalendarMonthAction).subscribe((action) => {
+            this.#currentMonth$.next(action.payload.newMonth);
+        });
+        this._dispatcher.on(ChangeCalendarDaysAction).subscribe((action) => {
+            this.#currentMonthDays$.next(action.payload.newDays);
         });
     }
 
-    get dateRange(): DateRange {
-        return this.#dateRange$.getValue();
+    get switchDirection$(): Observable<SwitchDirection | null> {
+        return this.#switchDirection$.asObservable();
     }
 
-    get dateRange$(): Observable<DateRange> {
-        return this.#dateRange$.asObservable();
+    get selectedDateRange(): DateRange {
+        return this.#selectedDateRange$.getValue();
+    }
+
+    get selectedDateRange$(): Observable<DateRange> {
+        return this.#selectedDateRange$.asObservable();
+    }
+
+    get currentMonth(): Dayjs {
+        return this.#currentMonth$.getValue();
+    }
+
+    get currentMonth$(): Observable<Dayjs> {
+        return this.#currentMonth$.asObservable();
+    }
+
+    get currentMonthDays$(): Observable<Dayjs[]> {
+        return this.#currentMonthDays$.asObservable();
     }
 }

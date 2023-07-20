@@ -2,6 +2,9 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { Path } from '@tracelytics/frontend/domain';
 import { MainDashboard, theme } from '@tracelytics/frontend/ui';
 import { DIApplication, DIProvider } from '@tracelytics/shared/di';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import utc from 'dayjs/plugin/utc';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -9,6 +12,9 @@ import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
 import { RootModule } from './root.module';
 
 import './styles.css';
+
+dayjs.extend(utc);
+dayjs.extend(isBetween);
 
 export const App = () => {
     const application = new DIApplication(RootModule);

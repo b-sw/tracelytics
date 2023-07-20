@@ -1,19 +1,22 @@
 import { Flex, SlideFade, Spacer, Text } from '@chakra-ui/react';
+import { SwitchCalendarMonthActionCreator } from '@tracelytics/frontend/application';
+import { CalendarState } from '@tracelytics/frontend/states';
+import { useInjection } from '@tracelytics/shared/di';
+import { ActionCreator } from '@tracelytics/shared/flux';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
+import { useSubscriptionState } from '../../../generic';
 import { DashboardTile } from '../../../generic/DashboardTile';
 import { DaysGrid } from './Days.grid';
 import { MonthPicker } from './MonthPicker';
 
-enum SlideDirection {
-    LEFT = -1,
-    RIGHT = 1,
-}
-
 export const CalendarTile = () => {
+    const setMonthOffsetActionCreator = useInjection<ActionCreator>(SwitchCalendarMonthActionCreator);
+    const calendarState = useInjection<CalendarState>(CalendarState);
+
+    const monthOffset = useSubscriptionState(calendarState.currentMonth$);
+
     const [days, setDays] = useState<Dayjs[]>([]);
-    const [selectedDate, setSelectedDate] = useState(dayjs());
-    const [monthOffset, setMonthOffset] = useState(0);
     const [slideDirection, setSlideDirection] = useState(SlideDirection.RIGHT);
 
     useEffect(() => {
@@ -21,7 +24,7 @@ export const CalendarTile = () => {
     }, [monthOffset]);
 
     const switchMonth = (direction: SlideDirection): void => {
-        setMonthOffset(monthOffset - direction);
+        setMonthOffsetActionCreator.create(monthOffset - direction);
         setSlideDirection(direction);
     };
 
@@ -54,13 +57,7 @@ export const CalendarTile = () => {
                 </MonthPicker>
 
                 <WeekDays />
-                <DaysGrid
-                    monthOffset={monthOffset}
-                    days={days}
-                    slideDirection={slideDirection}
-                    selectedDate={selectedDate}
-                    onClick={setSelectedDate}
-                />
+                <DaysGrid days={days} slideDirection={slideDirection} />
             </Flex>
         </DashboardTile>
     );
@@ -84,22 +81,4 @@ const WeekDays = () => {
             <Text>SUN</Text>
         </Flex>
     );
-};
-
-const getMonthDays = (date: Dayjs): Dayjs[] => {
-    // in dayjs week starts from sunday and is 0 indexed
-    const firstDayOffsets: { [key: number]: number } = { 0: 6, 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5 };
-    const pageDaysCount = 42;
-    const monthStart = dayjs(date).startOf('month');
-    const monthStartDay = monthStart.day();
-
-    let pageDay = monthStart.subtract(firstDayOffsets[monthStartDay], 'day');
-
-    const days = new Array(pageDaysCount);
-    for (let i = 0; i < pageDaysCount; i++) {
-        days[i] = pageDay;
-        pageDay = pageDay.add(1, 'day');
-    }
-
-    return days;
 };

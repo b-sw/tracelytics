@@ -24,7 +24,8 @@
             "@tracelytics/frontend/ui": ["libs/frontend/ui/src/index.ts"],
             "@tracelytics/shared/di": ["libs/shared/di/src/index.ts"],
             "@tracelytics/shared/flux": ["libs/shared/flux/src/index.ts"],
-            "@tracelytics/shared/types": ["libs/shared/types/src/index.ts"]
+            "@tracelytics/shared/types": ["libs/shared/types/src/index.ts"],
+            "@tracelytics/shared/utils": ["libs/shared/utils/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
