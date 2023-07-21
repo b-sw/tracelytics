@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { Dashboard } from '../../generic/Dashboard';
+import { Dashboard } from '../../generic';
 import { CalendarTile } from './calendar/Calendar.tile';
 import { ChartTile } from './Chart.tile';
 import { EventsPickerTile } from './EventsPicker.tile';

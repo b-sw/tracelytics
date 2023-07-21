@@ -1,22 +1,20 @@
 import { Flex, Grid, SlideFade } from '@chakra-ui/react';
-import { Dayjs } from 'dayjs';
+import { CalendarState } from '@tracelytics/frontend/application';
+import { useInjection } from '@tracelytics/shared/di';
+import { useSubscriptionState } from '../../../generic';
 import { DayTile } from './Day.tile';
 
-type Props = {
-    monthOffset: number;
-    selectedDate: Dayjs;
-    slideDirection: number;
-    days: Dayjs[];
-    onClick: (date: Dayjs) => void;
-};
+export const DaysGrid = () => {
+    const calendarState = useInjection<CalendarState>(CalendarState);
 
-export const DaysGrid = ({ monthOffset, selectedDate, slideDirection, days, onClick }: Props) => {
+    const switchDirection = useSubscriptionState(calendarState.switchDirection$, calendarState.switchDirection);
+    const days = useSubscriptionState(calendarState.currentMonthDays$, calendarState.currentMonthDays);
+
     return (
         <Flex>
             <SlideFade
                 in={true}
-                key={monthOffset}
-                offsetX={75 * slideDirection}
+                offsetX={75 * (switchDirection ?? 1)}
                 offsetY={0}
                 style={{ height: '100%', overflow: 'hidden' }}
             >
@@ -28,13 +26,7 @@ export const DaysGrid = ({ monthOffset, selectedDate, slideDirection, days, onCl
                     h={'100%'}
                 >
                     {days.map((date) => (
-                        <DayTile
-                            key={date.toString()}
-                            date={date}
-                            selectedDate={selectedDate}
-                            monthOffset={monthOffset}
-                            onClick={onClick}
-                        />
+                        <DayTile key={date.toString()} date={date} />
                     ))}
                 </Grid>
             </SlideFade>

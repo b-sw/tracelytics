@@ -1,7 +1,8 @@
-import { StatesModule } from '@tracelytics/frontend/states';
+import { ApplicationModule } from '@tracelytics/frontend/application';
 import { Module } from '@tracelytics/shared/di';
+import { FluxModule } from '@tracelytics/shared/flux';
 
 @Module({
-    imports: [StatesModule],
+    imports: [FluxModule, ApplicationModule],
 })
 export class RootModule {}

@@ -1,63 +1,42 @@
 import { Flex, SlideFade, Spacer, Text } from '@chakra-ui/react';
-import { SwitchCalendarMonthActionCreator } from '@tracelytics/frontend/application';
-import { CalendarState } from '@tracelytics/frontend/states';
+import { CalendarState } from '@tracelytics/frontend/application';
 import { useInjection } from '@tracelytics/shared/di';
-import { ActionCreator } from '@tracelytics/shared/flux';
-import dayjs, { Dayjs } from 'dayjs';
-import { useEffect, useState } from 'react';
-import { useSubscriptionState } from '../../../generic';
-import { DashboardTile } from '../../../generic/DashboardTile';
+import { DashboardTile, useSubscriptionState } from '../../../generic';
 import { DaysGrid } from './Days.grid';
 import { MonthPicker } from './MonthPicker';
 
 export const CalendarTile = () => {
-    const setMonthOffsetActionCreator = useInjection<ActionCreator>(SwitchCalendarMonthActionCreator);
     const calendarState = useInjection<CalendarState>(CalendarState);
 
-    const monthOffset = useSubscriptionState(calendarState.currentMonth$);
-
-    const [days, setDays] = useState<Dayjs[]>([]);
-    const [slideDirection, setSlideDirection] = useState(SlideDirection.RIGHT);
-
-    useEffect(() => {
-        setDays(getMonthDays(dayjs().add(monthOffset, 'month')));
-    }, [monthOffset]);
-
-    const switchMonth = (direction: SlideDirection): void => {
-        setMonthOffsetActionCreator.create(monthOffset - direction);
-        setSlideDirection(direction);
-    };
+    const currentMonth = useSubscriptionState(calendarState.currentMonth$, calendarState.currentMonth);
+    const switchDirection = useSubscriptionState(calendarState.switchDirection$, calendarState.switchDirection);
 
     return (
         <DashboardTile options={{ w: '50%' }}>
             <Flex direction={'column'} w={'full'} gap={5}>
-                <MonthPicker
-                    onSlideLeft={() => switchMonth(SlideDirection.LEFT)}
-                    onSlideRight={() => switchMonth(SlideDirection.RIGHT)}
-                >
+                <MonthPicker>
                     <Flex w={'60%'}>
                         <Spacer />
                         <Flex>
                             <SlideFade
                                 in={true}
-                                key={monthOffset}
-                                offsetX={20 * slideDirection}
+                                offsetX={20 * (switchDirection ?? 1)}
                                 offsetY={0}
                                 style={{ width: '100%' }}
                             >
-                                <Text>{dayjs().add(monthOffset, 'month').format('MMMM')}</Text>
+                                <Text>{currentMonth.format('MMMM')}</Text>
                             </SlideFade>
                         </Flex>
                         <Spacer />
                     </Flex>
 
                     <Flex w={'40%'}>
-                        <Text>{dayjs().add(monthOffset, 'month').format('YYYY')}</Text>
+                        <Text>{currentMonth.format('YYYY')}</Text>
                     </Flex>
                 </MonthPicker>
 
                 <WeekDays />
-                <DaysGrid days={days} slideDirection={slideDirection} />
+                <DaysGrid />
             </Flex>
         </DashboardTile>
     );

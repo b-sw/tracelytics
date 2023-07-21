@@ -20,7 +20,7 @@ export default {
     displayName: 'frontend-ui',
     preset: '../../../jest.preset.js',
     transform: {
-        '^.+\\.[tj]sx?$': ['@swc/jest', swcJestConfig],
+        '^.+\\.[tj]sx$': ['@swc/jest', swcJestConfig],
     },
     moduleFileExtensions: ['ts', 'js', 'html', 'tsx'],
     testEnvironment: 'jsdom',

@@ -73,6 +73,11 @@ describe('CalendarState', () => {
         expect(calendarState.currentMonth).toEqual(dayjs().startOf('month'));
     });
 
+    it('gets current month days', () => {
+        // TODO: testing implementation
+        expect(calendarState.currentMonthDays).toEqual(getMonthDays(dayjs()));
+    });
+
     it('pipes current month days on init', () => {
         const currentMonthDaysSpy = jest.fn();
 
@@ -93,6 +98,18 @@ describe('CalendarState', () => {
 
         expect(currentMonthDaysSpy).toHaveBeenCalledTimes(2);
         expect(currentMonthDaysSpy).toHaveBeenNthCalledWith(2, newDaysStub);
+    });
+
+    it('gets default switch direction', () => {
+        expect(calendarState.switchDirection).toEqual(null);
+    });
+
+    it('gets changed switch direction', () => {
+        const switchDirectionStub = SwitchDirection.Right;
+
+        dispatcher.emit(new ChangeCalendarSwitchDirectionAction({ switchDirection: switchDirectionStub }));
+
+        expect(calendarState.switchDirection).toEqual(switchDirectionStub);
     });
 
     it('pipes switch direction on init', () => {

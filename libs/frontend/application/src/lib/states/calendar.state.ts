@@ -1,15 +1,15 @@
+import { CalendarState as CalendarStateModel, DateRange, SwitchDirection } from '@tracelytics/frontend/domain';
+import { Dispatcher } from '@tracelytics/shared/flux';
+import { getMonthDays } from '@tracelytics/shared/utils';
+import dayjs, { Dayjs } from 'dayjs';
+import { inject, injectable } from 'inversify';
+import { BehaviorSubject, Observable } from 'rxjs';
 import {
     ChangeCalendarDaysAction,
     ChangeCalendarMonthAction,
     ChangeCalendarSelectedDateRangeAction,
     ChangeCalendarSwitchDirectionAction,
-} from '@tracelytics/frontend/application';
-import { CalendarState as CalendarStateModel, DateRange, SwitchDirection } from '@tracelytics/frontend/domain';
-import { Dispatcher } from '@tracelytics/shared/flux';
-import { getMonthDays } from '@tracelytics/shared/utils';
-import dayjs, { Dayjs } from 'dayjs';
-import { injectable } from 'inversify';
-import { BehaviorSubject, Observable } from 'rxjs';
+} from '../actions';
 
 @injectable()
 export class CalendarState implements CalendarStateModel {
@@ -28,7 +28,7 @@ export class CalendarState implements CalendarStateModel {
     #currentMonth$ = new BehaviorSubject<Dayjs>(CalendarState.DEFAULT_STATE.currentMonth);
     #currentMonthDays$ = new BehaviorSubject<Dayjs[]>(CalendarState.DEFAULT_STATE.currentMonthDays);
 
-    constructor(private readonly _dispatcher: Dispatcher) {
+    constructor(@inject(Dispatcher) private readonly _dispatcher: Dispatcher) {
         this._dispatcher.on(ChangeCalendarSwitchDirectionAction).subscribe((action) => {
             this.#switchDirection$.next(action.payload.switchDirection);
         });
@@ -41,6 +41,10 @@ export class CalendarState implements CalendarStateModel {
         this._dispatcher.on(ChangeCalendarDaysAction).subscribe((action) => {
             this.#currentMonthDays$.next(action.payload.newDays);
         });
+    }
+
+    get switchDirection(): SwitchDirection | null {
+        return this.#switchDirection$.getValue();
     }
 
     get switchDirection$(): Observable<SwitchDirection | null> {
@@ -61,6 +65,10 @@ export class CalendarState implements CalendarStateModel {
 
     get currentMonth$(): Observable<Dayjs> {
         return this.#currentMonth$.asObservable();
+    }
+
+    get currentMonthDays(): Dayjs[] {
+        return this.#currentMonthDays$.getValue();
     }
 
     get currentMonthDays$(): Observable<Dayjs[]> {
