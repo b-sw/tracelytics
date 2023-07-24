@@ -9,6 +9,7 @@ import {
     ChangeCalendarMonthAction,
     ChangeCalendarSelectedDateRangeAction,
     ChangeCalendarSwitchDirectionAction,
+    ChangeTemporaryDateRangeEndAction,
 } from '../actions';
 
 @injectable()
@@ -16,17 +17,19 @@ export class CalendarState implements CalendarStateModel {
     static readonly DEFAULT_STATE = {
         switchDirection: null,
         dateRange: {
-            start: dayjs().startOf('day'),
-            end: dayjs().endOf('day'),
+            start: null,
+            end: null,
         },
         currentMonth: dayjs().startOf('month'),
         currentMonthDays: getMonthDays(dayjs()),
+        temporaryDateRangeEnd: null,
     };
 
     #switchDirection$ = new BehaviorSubject<SwitchDirection | null>(CalendarState.DEFAULT_STATE.switchDirection);
     #selectedDateRange$ = new BehaviorSubject<DateRange>(CalendarState.DEFAULT_STATE.dateRange);
     #currentMonth$ = new BehaviorSubject<Dayjs>(CalendarState.DEFAULT_STATE.currentMonth);
     #currentMonthDays$ = new BehaviorSubject<Dayjs[]>(CalendarState.DEFAULT_STATE.currentMonthDays);
+    #temporaryDateRangeEnd$ = new BehaviorSubject<Dayjs | null>(CalendarState.DEFAULT_STATE.temporaryDateRangeEnd);
 
     constructor(@inject(Dispatcher) private readonly _dispatcher: Dispatcher) {
         this._dispatcher.on(ChangeCalendarSwitchDirectionAction).subscribe((action) => {
@@ -40,6 +43,9 @@ export class CalendarState implements CalendarStateModel {
         });
         this._dispatcher.on(ChangeCalendarDaysAction).subscribe((action) => {
             this.#currentMonthDays$.next(action.payload.newDays);
+        });
+        this._dispatcher.on(ChangeTemporaryDateRangeEndAction).subscribe((action) => {
+            this.#temporaryDateRangeEnd$.next(action.payload.newEnd);
         });
     }
 
@@ -73,5 +79,13 @@ export class CalendarState implements CalendarStateModel {
 
     get currentMonthDays$(): Observable<Dayjs[]> {
         return this.#currentMonthDays$.asObservable();
+    }
+
+    get temporaryDateRangeEnd(): Dayjs | null {
+        return this.#temporaryDateRangeEnd$.getValue();
+    }
+
+    get temporaryDateRangeEnd$(): Observable<Dayjs | null> {
+        return this.#temporaryDateRangeEnd$.asObservable();
     }
 }

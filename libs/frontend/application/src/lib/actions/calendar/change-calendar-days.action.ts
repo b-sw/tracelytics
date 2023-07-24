@@ -3,6 +3,6 @@ import { Dayjs } from 'dayjs';
 
 export class ChangeCalendarDaysAction extends DispatcherAction {
     constructor(public override readonly payload: { newDays: Dayjs[] }) {
-        super();
+        super(payload);
     }
 }

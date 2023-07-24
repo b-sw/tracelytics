@@ -43,17 +43,20 @@ export const DayTile = ({ date }: Props) => {
             }
             cursor={'pointer'}
             onMouseDown={() => {
-                console.log('click');
                 selectDayActionCreator.create({ start: date, end: null });
             }}
-            // TODO: add on mouse over
+            onMouseOver={() => {
+                // console.log('mouse over', selectedDateRange.start, selectedDateRange.end);
+                // if (selectedDateRange.start && !selectedDateRange.end) {
+                //     selectDayActionCreator.create({ start: null, end: date });
+                // }
+            }}
             onMouseUp={() => {
-                console.log('mouseup');
                 selectDayActionCreator.create({ start: null, end: date });
             }}
         >
             <Spacer />
-            <Text fontWeight={'medium'} fontSize={'md'} opacity={isCurrentMonth ? 1 : 0.3}>
+            <Text fontWeight={'medium'} fontSize={'md'} opacity={isCurrentMonth ? 1 : 0.3} userSelect={'none'}>
                 {date.format('D')}
             </Text>
             <Spacer />

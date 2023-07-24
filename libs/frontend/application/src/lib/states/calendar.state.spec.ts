@@ -1,15 +1,16 @@
-import {
-    ChangeCalendarDaysAction,
-    ChangeCalendarMonthAction,
-    ChangeCalendarSelectedDateRangeAction,
-    ChangeCalendarSwitchDirectionAction,
-} from '@tracelytics/frontend/application';
 import { SwitchDirection } from '@tracelytics/frontend/domain';
 import { createTestingModule } from '@tracelytics/shared/di';
 import { Dispatcher } from '@tracelytics/shared/flux';
 import { getMonthDays } from '@tracelytics/shared/utils';
 import dayjs from 'dayjs';
 import 'reflect-metadata';
+import {
+    ChangeCalendarDaysAction,
+    ChangeCalendarMonthAction,
+    ChangeCalendarSelectedDateRangeAction,
+    ChangeCalendarSwitchDirectionAction,
+    ChangeTemporaryDateRangeEndAction,
+} from '../actions';
 import { CalendarState } from './calendar.state';
 
 describe('CalendarState', () => {
@@ -24,10 +25,10 @@ describe('CalendarState', () => {
         dispatcher = testingContainer.get(Dispatcher);
     });
 
-    it('date range is today by default', () => {
+    it('date range is none by default', () => {
         expect(calendarState.selectedDateRange).toEqual({
-            start: dayjs().startOf('day'),
-            end: dayjs().endOf('day'),
+            start: null,
+            end: null,
         });
     });
 
@@ -130,5 +131,29 @@ describe('CalendarState', () => {
 
         expect(switchDirectionSpy).toHaveBeenCalledTimes(2);
         expect(switchDirectionSpy).toHaveBeenNthCalledWith(2, switchDirectionStub);
+    });
+
+    it('gets temporary selected date range end', () => {
+        expect(calendarState.temporaryDateRangeEnd).toEqual(null);
+    });
+
+    it('pipes temporary selected date range end on init', () => {
+        const temporaryDateRangeEndSpy = jest.fn();
+
+        calendarState.temporaryDateRangeEnd$.subscribe(temporaryDateRangeEndSpy);
+
+        expect(temporaryDateRangeEndSpy).toHaveBeenCalledTimes(1);
+        expect(temporaryDateRangeEndSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('pipes temporary selected date range end on change', () => {
+        const temporaryDateRangeEndSpy = jest.fn();
+        const newEndStub = dayjs().startOf('day');
+        calendarState.temporaryDateRangeEnd$.subscribe(temporaryDateRangeEndSpy);
+
+        dispatcher.emit(new ChangeTemporaryDateRangeEndAction({ newEnd: newEndStub }));
+
+        expect(temporaryDateRangeEndSpy).toHaveBeenCalledTimes(2);
+        expect(temporaryDateRangeEndSpy).toHaveBeenNthCalledWith(2, newEndStub);
     });
 });
