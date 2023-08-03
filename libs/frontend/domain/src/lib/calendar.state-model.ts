@@ -1,5 +1,4 @@
 import { Dayjs } from 'dayjs';
-import { Observable } from 'rxjs';
 import { DateRange } from './date-range';
 
 export enum SwitchDirection {
@@ -7,10 +6,9 @@ export enum SwitchDirection {
     Right = 1,
 }
 
-export interface CalendarState {
+export type CalendarState = {
+    switchDirection: SwitchDirection | null;
     selectedDateRange: DateRange;
-    selectedDateRange$: Observable<DateRange>;
     currentMonth: Dayjs;
-    currentMonth$: Observable<Dayjs>;
-    currentMonthDays$: Observable<Dayjs[]>;
-}
+    currentMonthDays: Dayjs[];
+};

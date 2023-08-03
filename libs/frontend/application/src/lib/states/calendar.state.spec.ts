@@ -9,7 +9,6 @@ import {
     ChangeCalendarMonthAction,
     ChangeCalendarSelectedDateRangeAction,
     ChangeCalendarSwitchDirectionAction,
-    ChangeTemporaryDateRangeEndAction,
 } from '../actions';
 import { CalendarState } from './calendar.state';
 
@@ -131,29 +130,5 @@ describe('CalendarState', () => {
 
         expect(switchDirectionSpy).toHaveBeenCalledTimes(2);
         expect(switchDirectionSpy).toHaveBeenNthCalledWith(2, switchDirectionStub);
-    });
-
-    it('gets temporary selected date range end', () => {
-        expect(calendarState.temporaryDateRangeEnd).toEqual(null);
-    });
-
-    it('pipes temporary selected date range end on init', () => {
-        const temporaryDateRangeEndSpy = jest.fn();
-
-        calendarState.temporaryDateRangeEnd$.subscribe(temporaryDateRangeEndSpy);
-
-        expect(temporaryDateRangeEndSpy).toHaveBeenCalledTimes(1);
-        expect(temporaryDateRangeEndSpy).toHaveBeenCalledWith(null);
-    });
-
-    it('pipes temporary selected date range end on change', () => {
-        const temporaryDateRangeEndSpy = jest.fn();
-        const newEndStub = dayjs().startOf('day');
-        calendarState.temporaryDateRangeEnd$.subscribe(temporaryDateRangeEndSpy);
-
-        dispatcher.emit(new ChangeTemporaryDateRangeEndAction({ newEnd: newEndStub }));
-
-        expect(temporaryDateRangeEndSpy).toHaveBeenCalledTimes(2);
-        expect(temporaryDateRangeEndSpy).toHaveBeenNthCalledWith(2, newEndStub);
     });
 });
