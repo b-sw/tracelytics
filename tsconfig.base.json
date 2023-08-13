@@ -1,53 +1,32 @@
 {
-	"compileOnSave": false,
-	"compilerOptions": {
-		"rootDir": ".",
-		"sourceMap": true,
-		"declaration": false,
-		"moduleResolution": "node",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"importHelpers": true,
-		"target": "es2015",
-		"module": "esnext",
-		"lib": [
-			"es2020",
-			"dom"
-		],
-		"skipLibCheck": true,
-		"skipDefaultLibCheck": true,
-		"baseUrl": ".",
-		"paths": {
-			"@tracelytics/backend/auth": [
-				"libs/backend/auth/src/index.ts"
-			],
-			"@tracelytics/frontend/application": [
-				"libs/frontend/application/src/index.ts"
-			],
-			"@tracelytics/frontend/domain": [
-				"libs/frontend/domain/src/index.ts"
-			],
-			"@tracelytics/frontend/ui": [
-				"libs/frontend/ui/src/index.ts"
-			],
-			"@tracelytics/shared/di": [
-				"libs/shared/di/src/index.ts"
-			],
-			"@tracelytics/shared/flux": [
-				"libs/shared/flux/src/index.ts"
-			],
-			"@tracelytics/shared/types": [
-				"libs/shared/types/src/index.ts"
-			],
-			"@tracelytics/shared/utils": [
-				"libs/shared/utils/src/index.ts"
-			]
-		}
-	},
-	"exclude": [
-		"node_modules",
-		"tmp"
-	]
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "importHelpers": true,
+        "target": "es2015",
+        "module": "esnext",
+        "lib": ["es2020", "dom"],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@tracelytics/backend/auth": ["libs/backend/auth/src/index.ts"],
+            "@tracelytics/backend/events": ["libs/backend/events/src/index.ts"],
+            "@tracelytics/frontend/application": ["libs/frontend/application/src/index.ts"],
+            "@tracelytics/frontend/domain": ["libs/frontend/domain/src/index.ts"],
+            "@tracelytics/frontend/ui": ["libs/frontend/ui/src/index.ts"],
+            "@tracelytics/shared/di": ["libs/shared/di/src/index.ts"],
+            "@tracelytics/shared/flux": ["libs/shared/flux/src/index.ts"],
+            "@tracelytics/shared/types": ["libs/shared/types/src/index.ts"],
+            "@tracelytics/shared/utils": ["libs/shared/utils/src/index.ts"]
+        }
+    },
+    "exclude": ["node_modules", "tmp"]
 }
