@@ -1,13 +1,12 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { EventsResolver } from './events.resolver';
 
 @Module({
-    imports: [
-        GraphQLModule.forRoot<ApolloDriverConfig>({
-            driver: ApolloDriver,
-            autoSchemaFile: `${process.cwd()}libs/backend/events/src/gql-schema/schema.gql`,
-        }),
-    ],
+    imports: [],
+    providers: [EventsResolver],
 })
-export class EventsModule {}
+export class EventsModule {
+    constructor() {
+        console.log('EventsModule loaded', process.env['MONGO_DB_HOST']);
+    }
+}
