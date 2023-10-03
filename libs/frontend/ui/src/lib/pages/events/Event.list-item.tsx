@@ -9,26 +9,26 @@ import {
     Spacer,
     Text,
 } from '@chakra-ui/react';
-import { ListItem } from '../../generic/ListItem';
+import { ListItem } from '../../generic';
 
 export const EventListItem = () => {
     return (
         <ListItem>
             <Flex gap={4} alignItems={'center'} w={'100%'} role={'group'}>
-                <Flex w={'35%'} gap={4}>
+                <Flex w={'35%'} gap={4} ml={2}>
                     <Checkbox variant={'circular'} />
-                    <Text fontSize={'xl'}>Button clicked</Text>
+                    <Text fontSize={'lg'}>Button clicked</Text>
                 </Flex>
 
                 <Flex w={'10%'}>
-                    <CircularProgress value={75} color={'tcs.500'} size={'60px'}>
+                    <CircularProgress value={75} color={'tcs.500'} size={'40px'}>
                         <CircularProgressLabel>
-                            <Text fontSize={'md'}>1324</Text>
+                            <Text fontSize={'xs'}>1324</Text>
                         </CircularProgressLabel>
                     </CircularProgress>
                 </Flex>
 
-                <Flex direction={'column'} w={'30%'} gap={2}>
+                <Flex direction={'row'} w={'30%'} gap={2}>
                     <CategoryBadge />
                     <StatusBadge />
                 </Flex>
