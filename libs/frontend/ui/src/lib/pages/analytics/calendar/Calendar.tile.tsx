@@ -15,14 +15,15 @@ export const CalendarTile = () => {
         <DashboardTile options={{ w: '50%' }}>
             <Flex direction={'column'} w={'full'} gap={5}>
                 <MonthPicker>
-                    <Flex w={'60%'}>
+                    <Flex w={'60%'} textColor={'gray.900'}>
                         <Spacer />
                         <Flex>
                             <SlideFade
                                 in={true}
-                                offsetX={20 * (switchDirection ?? 1)}
+                                key={currentMonth.format('MM-YYYY')}
+                                offsetX={75 * (switchDirection ?? 1)}
                                 offsetY={0}
-                                style={{ width: '100%' }}
+                                style={{ height: '100%', overflow: 'hidden' }}
                             >
                                 <Text>{currentMonth.format('MMMM')}</Text>
                             </SlideFade>
@@ -44,7 +45,7 @@ export const CalendarTile = () => {
 
 const WeekDays = () => {
     return (
-        <Flex gap={2} bgColor={'gray.200'} rounded={'full'} p={1} px={5}>
+        <Flex gap={2} bgColor={'gray.200'} rounded={'full'} p={1} px={5} textColor={'gray.900'}>
             <Text>MON</Text>
             <Spacer />
             <Text>TUE</Text>

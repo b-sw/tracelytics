@@ -9,11 +9,13 @@ export const DaysGrid = () => {
 
     const switchDirection = useSubscriptionState(calendarState.switchDirection$, calendarState.switchDirection);
     const days = useSubscriptionState(calendarState.currentMonthDays$, calendarState.currentMonthDays);
+    const currentMonth = useSubscriptionState(calendarState.currentMonth$, calendarState.currentMonth);
 
     return (
         <Flex>
             <SlideFade
                 in={true}
+                key={currentMonth.format('MM-YYYY')}
                 offsetX={75 * (switchDirection ?? 1)}
                 offsetY={0}
                 style={{ height: '100%', overflow: 'hidden' }}
@@ -25,7 +27,7 @@ export const DaysGrid = () => {
                     overflow={'hidden'}
                     h={'100%'}
                 >
-                    {days.map((date) => (
+                    {days.map(date => (
                         <DayTile key={date.toString()} date={date} />
                     ))}
                 </Grid>

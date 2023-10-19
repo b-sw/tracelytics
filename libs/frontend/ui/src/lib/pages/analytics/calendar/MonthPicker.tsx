@@ -13,13 +13,17 @@ export const MonthPicker = ({ children }: Props) => {
     const switchMonthActionCreator = useInjection<SwitchCalendarMonthActionCreator>(SwitchCalendarMonthActionCreator);
 
     return (
-        <Flex alignItems={'center'}>
+        <Flex alignItems={'center'} textColor={'gray.900'}>
             <Spacer />
             <IconButton
                 icon={<ArrowBackIcon />}
                 aria-label={'Previous month'}
                 rounded={'full'}
                 onClick={() => switchMonthActionCreator.create(SwitchDirection.Left)}
+                color={'gray.900'}
+                _hover={{
+                    backgroundColor: 'gray.200',
+                }}
             />
 
             <Flex w={'40%'} fontWeight={'semibold'} fontSize={'2xl'} gap={2}>
@@ -31,6 +35,10 @@ export const MonthPicker = ({ children }: Props) => {
                 aria-label={'Next month'}
                 rounded={'full'}
                 onClick={() => switchMonthActionCreator.create(SwitchDirection.Right)}
+                color={'gray.900'}
+                _hover={{
+                    backgroundColor: 'gray.200',
+                }}
             />
             <Spacer />
         </Flex>

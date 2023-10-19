@@ -26,17 +26,17 @@ export class CalendarState extends State<CalendarStateModel> {
     constructor(@inject(Dispatcher) private readonly _dispatcher: Dispatcher) {
         super(CalendarState.DEFAULT_STATE);
 
-        this._dispatcher.on(ChangeCalendarSwitchDirectionAction).subscribe((action) => {
-            this._setPartialState({ switchDirection: action.payload.switchDirection });
+        this._dispatcher.on(ChangeCalendarSwitchDirectionAction).subscribe(action => {
+            this.setPartialState({ switchDirection: action.payload.switchDirection });
         });
-        this._dispatcher.on(ChangeCalendarSelectedDateRangeAction).subscribe((action) => {
-            this._setPartialState({ selectedDateRange: action.payload.newDateRange });
+        this._dispatcher.on(ChangeCalendarSelectedDateRangeAction).subscribe(action => {
+            this.setPartialState({ selectedDateRange: action.payload.newDateRange });
         });
-        this._dispatcher.on(ChangeCalendarMonthAction).subscribe((action) => {
-            this._setPartialState({ currentMonth: action.payload.newMonth });
+        this._dispatcher.on(ChangeCalendarMonthAction).subscribe(action => {
+            this.setPartialState({ currentMonth: action.payload.newMonth });
         });
-        this._dispatcher.on(ChangeCalendarDaysAction).subscribe((action) => {
-            this._setPartialState({ currentMonthDays: action.payload.newDays });
+        this._dispatcher.on(ChangeCalendarDaysAction).subscribe(action => {
+            this.setPartialState({ currentMonthDays: action.payload.newDays });
         });
     }
 }
