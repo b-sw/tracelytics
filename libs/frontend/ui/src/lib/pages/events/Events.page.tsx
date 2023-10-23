@@ -11,7 +11,7 @@ export const EventsPage = () => {
                 <SearchInput handleChange={() => {}} placeholder={'Search for events'} />
 
                 <TableItems>
-                    {Array.from({ length: 25 }, (_, index) => (
+                    {Array.from({ length: 30 }, (_, index) => (
                         <EventListItem key={index} />
                     ))}
                 </TableItems>

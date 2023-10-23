@@ -80,6 +80,7 @@ const EventActions = () => {
         <Flex _hover={{ child: { display: 'inherit' } }}>
             <Flex gap={2}>
                 <IconButton
+                    color={'gray.600'}
                     rounded={'full'}
                     variant={'ghost'}
                     aria-label="edit"
@@ -92,6 +93,7 @@ const EventActions = () => {
                     }}
                 />
                 <IconButton
+                    color={'gray.600'}
                     rounded={'full'}
                     variant={'ghost'}
                     aria-label="delete"

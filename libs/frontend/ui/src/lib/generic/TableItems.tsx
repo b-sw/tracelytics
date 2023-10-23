@@ -8,10 +8,10 @@ type Props = {
 export const TableItems = ({ children, options }: Props) => {
     return (
         <Flex
-            w={'100%'}
+            w={'full'}
+            h={'fit-content'}
             direction={'column'}
             shadow={'md'}
-            h={'fit-content'}
             overflowY={'scroll'}
             backgroundColor={'gray.50'}
             borderRadius={25}

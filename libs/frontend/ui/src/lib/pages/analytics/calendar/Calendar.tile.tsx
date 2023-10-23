@@ -12,7 +12,7 @@ export const CalendarTile = () => {
     const switchDirection = useSubscriptionState(calendarState.switchDirection$, calendarState.switchDirection);
 
     return (
-        <DashboardTile options={{ w: '50%' }}>
+        <DashboardTile options={{ w: 'full' }}>
             <Flex direction={'column'} w={'full'} gap={5}>
                 <MonthPicker>
                     <Flex w={'60%'} textColor={'gray.900'}>
