@@ -36,29 +36,8 @@ export const CalendarTile = () => {
                     </Flex>
                 </MonthPicker>
 
-                <WeekDays />
                 <DaysGrid />
             </Flex>
         </DashboardTile>
-    );
-};
-
-const WeekDays = () => {
-    return (
-        <Flex gap={2} bgColor={'gray.200'} rounded={'full'} p={1} px={5} textColor={'gray.900'}>
-            <Text>MON</Text>
-            <Spacer />
-            <Text>TUE</Text>
-            <Spacer />
-            <Text>WED</Text>
-            <Spacer />
-            <Text>THU</Text>
-            <Spacer />
-            <Text>FRI</Text>
-            <Spacer />
-            <Text>SAT</Text>
-            <Spacer />
-            <Text>SUN</Text>
-        </Flex>
     );
 };
