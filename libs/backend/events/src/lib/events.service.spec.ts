@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import dayjs from 'dayjs';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { connect, Connection, Model } from 'mongoose';
-import { EventSchema } from './event.schema';
+import { Event, EventSchema } from './event.schema';
 import { EventsService } from './events.service';
 
 describe('AppService', () => {
@@ -63,5 +63,26 @@ describe('AppService', () => {
         await service.delete(createdEvent.id);
 
         expect(await service.find(createdEvent.id)).toBeNull();
+    });
+
+    it('throws on delete for non-existing event', async () => {
+        const deleteFn = async () => await service.delete('non-existing-id');
+
+        await expect(deleteFn).rejects.toThrow();
+    });
+
+    it('updates widget', async () => {
+        const createdEvent = await service.create(dtoStub);
+        const dto2Stub = { name: 'Test Event2', timestamp: dayjs().toISOString() };
+
+        const updatedEvent = await service.update(createdEvent.id, dto2Stub);
+
+        expect(updatedEvent).toEqual(expect.objectContaining({ id: createdEvent.id, ...dto2Stub }));
+    });
+
+    it('throws on update for non-existing event', async () => {
+        const updateFn = async () => await service.update('non-existing-id', dtoStub);
+
+        await expect(updateFn).rejects.toThrow();
     });
 });
