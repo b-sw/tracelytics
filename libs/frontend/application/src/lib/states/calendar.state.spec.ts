@@ -1,27 +1,18 @@
 import { SwitchDirection } from '@tracelytics/frontend/domain';
 import { createTestingModule } from '@tracelytics/shared/di';
-import { Dispatcher } from '@tracelytics/shared/flux';
 import { getMonthDays } from '@tracelytics/shared/utils';
 import dayjs from 'dayjs';
 import 'reflect-metadata';
-import {
-    ChangeCalendarDaysAction,
-    ChangeCalendarMonthAction,
-    ChangeCalendarSelectedDateRangeAction,
-    ChangeCalendarSwitchDirectionAction,
-} from '../actions';
 import { CalendarState } from './calendar.state';
 
 describe('CalendarState', () => {
     let calendarState: CalendarState;
-    let dispatcher: Dispatcher;
 
     beforeEach(() => {
         const testingContainer = createTestingModule({
-            providers: [CalendarState, Dispatcher],
+            providers: [CalendarState],
         });
         calendarState = testingContainer.get(CalendarState);
-        dispatcher = testingContainer.get(Dispatcher);
     });
 
     it('date range is none by default', () => {
@@ -42,9 +33,9 @@ describe('CalendarState', () => {
     it('pipes date range on change', () => {
         const dateRangeSpy = jest.fn();
         const newDateRangeStub = { start: dayjs().startOf('day'), end: null };
-
         calendarState.selectedDateRange$.subscribe(dateRangeSpy);
-        dispatcher.emit(new ChangeCalendarSelectedDateRangeAction({ newDateRange: newDateRangeStub }));
+
+        calendarState.selectedDateRange = newDateRangeStub;
 
         expect(dateRangeSpy).toHaveBeenNthCalledWith(2, newDateRangeStub);
     });
@@ -61,9 +52,9 @@ describe('CalendarState', () => {
     it('pipes selected month on change', () => {
         const selectedMonthSpy = jest.fn();
         const newMonthStub = dayjs().add(1, 'month');
-
         calendarState.currentMonth$.subscribe(selectedMonthSpy);
-        dispatcher.emit(new ChangeCalendarMonthAction({ newMonth: newMonthStub }));
+
+        calendarState.currentMonth = newMonthStub;
 
         expect(selectedMonthSpy).toHaveBeenCalledTimes(2);
         expect(selectedMonthSpy).toHaveBeenNthCalledWith(2, newMonthStub);
@@ -92,10 +83,9 @@ describe('CalendarState', () => {
         const currentMonthDaysSpy = jest.fn();
         // TODO: testing implementation
         const newDaysStub = getMonthDays(dayjs().add(1, 'month'));
-
         calendarState.currentMonthDays$.subscribe(currentMonthDaysSpy);
-        dispatcher.emit(new ChangeCalendarDaysAction({ newDays: newDaysStub }));
 
+        calendarState.currentMonthDays = newDaysStub;
         expect(currentMonthDaysSpy).toHaveBeenCalledTimes(2);
         expect(currentMonthDaysSpy).toHaveBeenNthCalledWith(2, newDaysStub);
     });
@@ -107,7 +97,7 @@ describe('CalendarState', () => {
     it('gets changed switch direction', () => {
         const switchDirectionStub = SwitchDirection.Right;
 
-        dispatcher.emit(new ChangeCalendarSwitchDirectionAction({ switchDirection: switchDirectionStub }));
+        calendarState.switchDirection = switchDirectionStub;
 
         expect(calendarState.switchDirection).toEqual(switchDirectionStub);
     });
@@ -124,9 +114,9 @@ describe('CalendarState', () => {
     it('pipes switch direction on change', () => {
         const switchDirectionSpy = jest.fn();
         const switchDirectionStub = SwitchDirection.Right;
-
         calendarState.switchDirection$.subscribe(switchDirectionSpy);
-        dispatcher.emit(new ChangeCalendarSwitchDirectionAction({ switchDirection: switchDirectionStub }));
+
+        calendarState.switchDirection = switchDirectionStub;
 
         expect(switchDirectionSpy).toHaveBeenCalledTimes(2);
         expect(switchDirectionSpy).toHaveBeenNthCalledWith(2, switchDirectionStub);

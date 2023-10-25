@@ -1,0 +1,3 @@
+describe('useEventsQuery', () => {
+    it.todo('');
+});

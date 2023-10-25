@@ -1,13 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type EventDocument = HydratedDocument<Event>;
+export type RegisteredEventDocument = HydratedDocument<RegisteredEvent>;
 
 @Schema()
-export class Event {
-    @Prop()
-    id: string;
-
+export class RegisteredEvent {
     @Prop()
     name: string;
 
@@ -15,4 +12,4 @@ export class Event {
     timestamp: string;
 }
 
-export const EventSchema = SchemaFactory.createForClass(Event);
+export const RegisteredEventSchema = SchemaFactory.createForClass(RegisteredEvent);

@@ -21,6 +21,13 @@ function setupSwagger(app: INestApplication): void {
     const config = new DocumentBuilder().setTitle('Tracelytics events API').setVersion('1.0').build();
     const document = SwaggerModule.createDocument(app, config);
 
+    app.enableCors({
+        origin: '*',
+        allowedHeaders:
+            'Content-Type, Access-Control-Allow-Headers, Access-Control-Expose-Headers, Content-Disposition, Authorization, X-Requested-With',
+        exposedHeaders: 'Content-Disposition',
+    });
+
     SwaggerModule.setup(GLOBAL_PREFIX, app, document);
 }
 

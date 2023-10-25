@@ -1,7 +1,8 @@
 const buttonDefaultVariant = () => {
     return {
         rounded: 'full',
-        color: 'gray.500',
+        color: 'gray.50',
+        textColor: 'gray.50',
     };
 };
 

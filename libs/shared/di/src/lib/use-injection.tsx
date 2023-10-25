@@ -1,3 +1,4 @@
+import { Class } from '@tracelytics/shared/types';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { createContext, ReactNode, useContext } from 'react';
@@ -15,7 +16,7 @@ export const DIProvider = ({ container, children }: DIProviderProps) => {
     return <DIContext.Provider value={{ container }}>{children}</DIContext.Provider>;
 };
 
-export function useInjection<T>(token: InjectionToken) {
+export function useInjection<T>(token: InjectionToken | Class<T>): T {
     const { container } = useContext(DIContext);
 
     if (!container) {

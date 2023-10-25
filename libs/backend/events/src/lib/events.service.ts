@@ -1,53 +1,73 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { uuid } from '@tracelytics/shared/utils';
+import { CreateEventDto, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
 import { Model } from 'mongoose';
-import { CreateEventDto } from './dto/create-event.dto';
-import { Event } from './event.schema';
+import { RegisteredEvent } from './registered-event.schema';
 
 @Injectable()
 export class EventsService {
     private static readonly SELECT_OPTIONS = { select: { _id: 0, __v: 0 } };
 
-    constructor(@InjectModel(Event.name) private eventModel: Model<Event>) {}
+    constructor(
+        @InjectModel(TrackableEvent.name) private trackableEventModel: Model<TrackableEvent>,
+        @InjectModel(RegisteredEvent.name) private registeredEventModel: Model<RegisteredEvent>,
+    ) {}
 
-    create(dto: CreateEventDto): Promise<Event> {
-        const event = new this.eventModel({ id: uuid(), ...dto });
+    async create(dto: CreateEventDto): Promise<TrackableEvent> {
+        await this._requireEventDoesNotExist(dto.name);
+
+        const event = new this.trackableEventModel({ ...dto });
 
         return event.save();
     }
 
-    find(id: string): Promise<Event | null> {
-        return this.eventModel.findOne({ id }, null, EventsService.SELECT_OPTIONS).exec();
+    async register(eventName: string, dto: RegisterEventDto): Promise<RegisteredEvent> {
+        await this._requireEventExists(eventName);
+
+        const event = new this.registeredEventModel({ name: eventName, ...dto });
+
+        return event.save();
     }
 
-    findAll(): Promise<Event[]> {
-        return this.eventModel.find({}, null, EventsService.SELECT_OPTIONS).exec();
+    find(name: string): Promise<TrackableEvent | null> {
+        return this.trackableEventModel.findOne({ name }, null, EventsService.SELECT_OPTIONS).exec();
     }
 
-    async update(id: string, dto: CreateEventDto): Promise<Event> {
-        await this._requireEventExists(id);
+    findAll(): Promise<TrackableEvent[]> {
+        return this.trackableEventModel.find({}, null, EventsService.SELECT_OPTIONS).exec();
+    }
 
-        const event = await this.eventModel
-            .findOneAndUpdate({ id }, dto, {
+    async update(eventName: string, dto: CreateEventDto): Promise<TrackableEvent> {
+        await this._requireEventExists(eventName);
+
+        const event = await this.trackableEventModel
+            .findOneAndUpdate({ name: eventName }, dto, {
                 new: true,
                 ...EventsService.SELECT_OPTIONS,
             })
             .exec();
 
-        return event as Event;
+        return event as TrackableEvent;
     }
 
-    async delete(id: string): Promise<void> {
-        await this._requireEventExists(id);
-        await this.eventModel.findOneAndDelete({ id }).exec();
+    async delete(eventName: string): Promise<void> {
+        await this._requireEventExists(eventName);
+        await this.trackableEventModel.findOneAndDelete({ name: eventName }).exec();
     }
 
-    private async _requireEventExists(id: string): Promise<void> {
-        const event = await this.find(id);
+    private async _requireEventExists(eventName: string): Promise<void> {
+        const event = await this.find(eventName);
 
         if (!event) {
             throw new Error('Event not found');
+        }
+    }
+
+    private async _requireEventDoesNotExist(eventName: string): Promise<void> {
+        const event = await this.find(eventName);
+
+        if (event) {
+            throw new Error('Event already exists');
         }
     }
 }

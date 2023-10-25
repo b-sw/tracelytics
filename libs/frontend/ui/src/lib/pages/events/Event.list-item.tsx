@@ -6,31 +6,54 @@ import {
     CircularProgressLabel,
     Flex,
     IconButton,
+    Skeleton,
+    SkeletonText,
     Spacer,
+    Spinner,
     Text,
 } from '@chakra-ui/react';
+import { TrackableEvent } from '@tracelytics/shared/types';
 import { ListItem } from '../../generic';
 
-export const EventListItem = () => {
+type Props = {
+    event: TrackableEvent | null;
+};
+
+export const EventListItem = ({ event }: Props) => {
     return (
         <ListItem>
             <Flex gap={4} alignItems={'center'} w={'100%'} role={'group'}>
-                <Flex w={'35%'} gap={4} ml={2}>
-                    <Checkbox variant={'circular'} />
-                    <Text fontSize={'lg'}>Button clicked</Text>
+                <Flex w={'35%'} gap={4} ml={2} alignItems={'center'}>
+                    {event ? <Checkbox variant={'circular'} /> : <Skeleton rounded={'full'} w={'20px'} h={'20px'} />}
+                    {event ? (
+                        <Text fontSize={'lg'}>{event!.name}</Text>
+                    ) : (
+                        <SkeletonText noOfLines={1} fontSize={'lg'} w={'80%'} skeletonHeight={'4'} />
+                    )}
                 </Flex>
 
                 <Flex w={'10%'}>
-                    <CircularProgress value={75} color={'tcs.500'} size={'40px'}>
-                        <CircularProgressLabel>
-                            <Text fontSize={'xs'}>1324</Text>
-                        </CircularProgressLabel>
-                    </CircularProgress>
+                    {event ? (
+                        <CircularProgress value={75} color={'tcs.500'} size={'40px'}>
+                            <CircularProgressLabel>
+                                <Text fontSize={'xs'}>1324</Text>
+                            </CircularProgressLabel>
+                        </CircularProgress>
+                    ) : (
+                        <Spinner
+                            thickness="4px"
+                            speed="1s"
+                            emptyColor="gray.200"
+                            color="tcs.500"
+                            w={'40px'}
+                            h={'40px'}
+                        />
+                    )}
                 </Flex>
 
                 <Flex direction={'row'} w={'30%'} gap={2}>
-                    <CategoryBadge />
-                    <StatusBadge />
+                    <CategoryBadge event={event} />
+                    <StatusBadge event={event} />
                 </Flex>
 
                 <Spacer />
@@ -40,37 +63,45 @@ export const EventListItem = () => {
     );
 };
 
-const StatusBadge = () => {
+const StatusBadge = ({ event }: { event: TrackableEvent | null }) => {
     return (
         <Flex>
-            <Badge
-                fontSize={'12'}
-                fontWeight={'italic'}
-                textColor={'green.700'}
-                backgroundColor={'green.50'}
-                border={'1px'}
-                borderRadius={15}
-            >
-                <Text px={1}>Active</Text>
-            </Badge>
+            {event ? (
+                <Badge
+                    fontSize={'12'}
+                    fontWeight={'italic'}
+                    textColor={'green.700'}
+                    backgroundColor={'green.50'}
+                    border={'1px'}
+                    borderRadius={15}
+                >
+                    <Text px={1}>Active</Text>
+                </Badge>
+            ) : (
+                <Skeleton w={'60px'} h={'18px'} borderRadius={15} />
+            )}
         </Flex>
     );
 };
 
-const CategoryBadge = () => {
+const CategoryBadge = ({ event }: { event: TrackableEvent | null }) => {
     return (
         <Flex>
-            <Badge
-                variant={'solid'}
-                fontWeight={'semibold'}
-                backgroundColor={'gray.300'}
-                textColor={'gray.800'}
-                alignSelf={'center'}
-                borderRadius={15}
-                letterSpacing={'.5px'}
-            >
-                <Text px={1}>Event category</Text>
-            </Badge>
+            {event ? (
+                <Badge
+                    variant={'solid'}
+                    fontWeight={'semibold'}
+                    backgroundColor={'gray.300'}
+                    textColor={'gray.800'}
+                    alignSelf={'center'}
+                    borderRadius={15}
+                    letterSpacing={'.5px'}
+                >
+                    <Text px={1}>Event category</Text>
+                </Badge>
+            ) : (
+                <Skeleton w={'132px'} h={'18px'} borderRadius={15} />
+            )}
         </Flex>
     );
 };

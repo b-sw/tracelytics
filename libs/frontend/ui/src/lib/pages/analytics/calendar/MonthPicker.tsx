@@ -1,6 +1,6 @@
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Spacer } from '@chakra-ui/react';
-import { SwitchCalendarMonthActionCreator } from '@tracelytics/frontend/application';
+import { CalendarState } from '@tracelytics/frontend/application';
 import { SwitchDirection } from '@tracelytics/frontend/domain';
 import { useInjection } from '@tracelytics/shared/di';
 import { ReactNode } from 'react';
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const MonthPicker = ({ children }: Props) => {
-    const switchMonthActionCreator = useInjection<SwitchCalendarMonthActionCreator>(SwitchCalendarMonthActionCreator);
+    const calendarState = useInjection(CalendarState);
 
     return (
         <Flex alignItems={'center'} textColor={'gray.900'}>
@@ -19,7 +19,7 @@ export const MonthPicker = ({ children }: Props) => {
                 icon={<ArrowBackIcon />}
                 aria-label={'Previous month'}
                 rounded={'full'}
-                onClick={() => switchMonthActionCreator.create(SwitchDirection.Left)}
+                onClick={() => calendarState.switchMonth(SwitchDirection.Left)}
                 color={'gray.900'}
                 _hover={{
                     backgroundColor: 'gray.200',
@@ -34,7 +34,7 @@ export const MonthPicker = ({ children }: Props) => {
                 icon={<ArrowForwardIcon />}
                 aria-label={'Next month'}
                 rounded={'full'}
-                onClick={() => switchMonthActionCreator.create(SwitchDirection.Right)}
+                onClick={() => calendarState.switchMonth(SwitchDirection.Right)}
                 color={'gray.900'}
                 _hover={{
                     backgroundColor: 'gray.200',

@@ -1,3 +1,4 @@
+import { unmanagedWrapper } from '@tracelytics/shared/di';
 import { injectable } from 'inversify';
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
 
@@ -9,7 +10,7 @@ type StateProps = {
 class State<T extends StateProps> {
     #props$: BehaviorSubject<T>;
 
-    constructor(defaultState: T) {
+    constructor(@unmanagedWrapper() defaultState: T) {
         this.#props$ = new BehaviorSubject<T>(defaultState);
         const propsNames = Object.keys(defaultState);
 
