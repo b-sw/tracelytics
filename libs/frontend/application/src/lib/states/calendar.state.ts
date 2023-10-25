@@ -21,6 +21,7 @@ export class CalendarState extends State<CalendarStateModel> {
         },
         currentMonth: dayjs().startOf('month'),
         currentMonthDays: getMonthDays(dayjs()),
+        isSelecting: false,
     };
 
     constructor(@inject(Dispatcher) private readonly _dispatcher: Dispatcher) {

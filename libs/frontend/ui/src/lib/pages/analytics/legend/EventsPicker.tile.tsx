@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { SearchInput, TableItems } from '../../../generic';
-import { EventListItem } from '../../events/Event.list-item';
+import { LegendListItem } from './Legend.list-item';
 
 export const EventsPickerTile = () => {
     return (
@@ -8,7 +8,7 @@ export const EventsPickerTile = () => {
             <SearchInput handleChange={() => {}} placeholder={'Search for events'} />
             <TableItems>
                 {Array.from({ length: 40 }, (_, index) => (
-                    <EventListItem key={index} />
+                    <LegendListItem key={index} />
                 ))}
             </TableItems>
         </Flex>

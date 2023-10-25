@@ -21,7 +21,7 @@ export const NavigationButton = ({ path, icon, description, badge }: Props) => {
 
     const textColor = isActiveRoute(path) ? 'gray.700' : 'gray.500';
     const iconColor = isActiveRoute(path) ? 'purple.500' : 'gray.400';
-    const fontWeight = isActiveRoute(path) ? 'bold' : 'normal';
+    const borderBottom = isActiveRoute(path) ? '3px solid #7928CA' : 'none';
 
     return (
         <Flex alignItems={'center'}>
@@ -34,9 +34,10 @@ export const NavigationButton = ({ path, icon, description, badge }: Props) => {
                 _hover={{ textDecoration: 'none' }}
                 size={'lg'}
             >
-                <Flex w={'100%'} pl={5} alignItems={'center'} gap={2}>
+                <Flex position={'absolute'} borderBottom={borderBottom} h={'64px'} width={'full'} />
+                <Flex alignItems={'center'} gap={2}>
                     <Icon as={icon} color={iconColor} />
-                    <Text color={textColor} fontWeight={fontWeight} fontSize={'2xl'}>
+                    <Text color={textColor} fontSize={'xl'}>
                         {description}
                     </Text>
                     <Spacer />

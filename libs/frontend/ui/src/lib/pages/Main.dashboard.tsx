@@ -21,13 +21,15 @@ export const MainDashboard = () => {
     );
 
     return (
-        <Page>
+        <>
             <Sidebar />
-            <Flex mt={['12vh', 0]} flexGrow={1}>
-                <Spacer />
-                {routes}
-                <Spacer />
-            </Flex>
-        </Page>
+            <Page>
+                <Flex mt={'64px'} flexGrow={1}>
+                    <Spacer />
+                    {routes}
+                    <Spacer />
+                </Flex>
+            </Page>
+        </>
     );
 };

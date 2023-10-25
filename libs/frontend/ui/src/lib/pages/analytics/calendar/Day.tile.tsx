@@ -1,5 +1,5 @@
 import { Flex, Spacer, Text } from '@chakra-ui/react';
-import { CalendarState, SelectCalendarDayActionCreator } from '@tracelytics/frontend/application';
+import { CalendarState } from '@tracelytics/frontend/application';
 import { useInjection } from '@tracelytics/shared/di';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/plugin/isBetween';
@@ -11,7 +11,6 @@ type Props = {
 
 export const DayTile = ({ date }: Props) => {
     const calendarState = useInjection<CalendarState>(CalendarState);
-    const selectDayActionCreator = useInjection<SelectCalendarDayActionCreator>(SelectCalendarDayActionCreator);
 
     const selectedDateRange = useSubscriptionState(calendarState.selectedDateRange$, calendarState.selectedDateRange);
     const currentMonth = useSubscriptionState(calendarState.currentMonth$, calendarState.currentMonth);
@@ -25,6 +24,10 @@ export const DayTile = ({ date }: Props) => {
 
     const bgColor = isSelected ? 'tcs.500' : isToday ? 'tcs.100' : 'gray.50';
     const textColor = isSelected ? 'white' : isToday ? 'gray.800' : 'gray.800';
+
+    document.onmouseup = () => {
+        calendarState.isSelecting = false;
+    };
 
     return (
         <Flex
@@ -43,16 +46,17 @@ export const DayTile = ({ date }: Props) => {
             }
             cursor={'pointer'}
             onMouseDown={() => {
-                selectDayActionCreator.create({ start: date, end: null });
+                calendarState.isSelecting = true;
+                calendarState.selectedDateRange = { start: date, end: null };
             }}
             onMouseOver={() => {
-                // console.log('mouse over', selectedDateRange.start, selectedDateRange.end);
-                // if (selectedDateRange.start && !selectedDateRange.end) {
-                //     selectDayActionCreator.create({ start: null, end: date });
-                // }
+                if (calendarState.isSelecting) {
+                    calendarState.selectedDateRange = { start: calendarState.selectedDateRange.start, end: date };
+                }
             }}
             onMouseUp={() => {
-                selectDayActionCreator.create({ start: null, end: date });
+                calendarState.isSelecting = false;
+                calendarState.selectedDateRange = { start: calendarState.selectedDateRange.start, end: date };
             }}
         >
             <Spacer />

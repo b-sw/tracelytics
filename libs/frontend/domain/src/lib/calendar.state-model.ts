@@ -11,4 +11,5 @@ export type CalendarState = {
     selectedDateRange: DateRange;
     currentMonth: Dayjs;
     currentMonthDays: Dayjs[];
+    isSelecting: boolean;
 };
