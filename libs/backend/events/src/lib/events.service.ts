@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateEventDto, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
 import { uuid } from '@tracelytics/shared/utils';
+import { Dayjs } from 'dayjs';
 import { Model } from 'mongoose';
 import { EventAlreadyExistsError, EventNotFoundError } from './errors';
 import { RegisteredEvent } from './registered-event.schema';
@@ -29,6 +30,30 @@ export class EventsService {
         const event = await new this.registeredEventModel({ trackableEventId: eventId, ...dto }).save();
 
         return { trackableEventId: event.trackableEventId, timestamp: event.timestamp };
+    }
+
+    async getRegisteredEventsFromPeriod(
+        startDate: Dayjs,
+        endDate: Dayjs,
+    ): Promise<{ id: TrackableEvent['id']; count: number }[]> {
+        const events = await this.registeredEventModel.aggregate([
+            {
+                $match: {
+                    timestamp: {
+                        $gte: startDate.toISOString(),
+                        $lte: endDate.toISOString(),
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: '$trackableEventId',
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+
+        return events.map(event => ({ id: event._id, count: event.count }));
     }
 
     private _find(query: { id: string } | { name: string }): Promise<TrackableEvent | null> {

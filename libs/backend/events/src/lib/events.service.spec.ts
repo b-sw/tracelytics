@@ -61,20 +61,6 @@ describe('AppService', () => {
         await expect(createFn).rejects.toThrow();
     });
 
-    it('registers created event', async () => {
-        const createdEvent = await service.create(createDtoStub);
-
-        const registeredEvent = await service.register(createdEvent.id, registerDtoStub);
-
-        expect(registeredEvent).toEqual({ trackableEventId: createdEvent.id, ...registerDtoStub });
-    });
-
-    it('does not register non-existing event', async () => {
-        const registerFn = async () => await service.register(eventNameStub, registerDtoStub);
-
-        await expect(registerFn).rejects.toThrow();
-    });
-
     it('finds all events', async () => {
         const createDto2Stub = { name: 'Test Event2' };
 
@@ -115,5 +101,39 @@ describe('AppService', () => {
         const updateFn = async () => await service.update('non-existing-name', createDtoStub);
 
         await expect(updateFn).rejects.toThrow();
+    });
+
+    it('registers created event', async () => {
+        const createdEvent = await service.create(createDtoStub);
+
+        const registeredEvent = await service.register(createdEvent.id, registerDtoStub);
+
+        expect(registeredEvent).toEqual({ trackableEventId: createdEvent.id, ...registerDtoStub });
+    });
+
+    it('does not register non-existing event', async () => {
+        const registerFn = async () => await service.register(eventNameStub, registerDtoStub);
+
+        await expect(registerFn).rejects.toThrow();
+    });
+
+    it('gets registered events from period', async () => {
+        const createDto2Stub = { name: 'Test Event2' };
+        const createdEvent = await service.create(createDtoStub);
+        const createdEvent2 = await service.create(createDto2Stub);
+
+        await service.register(createdEvent.id, { timestamp: dayjs('2021-01-01').toISOString() });
+        await service.register(createdEvent.id, { timestamp: dayjs('2021-01-02').toISOString() });
+        await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-02').toISOString() });
+        await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-03').toISOString() });
+
+        const registeredEvents = await service.getRegisteredEventsFromPeriod(dayjs('2021-01-02'), dayjs('2021-01-03'));
+
+        expect(registeredEvents).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ id: createdEvent.id, count: 1 }),
+                expect.objectContaining({ id: createdEvent2.id, count: 2 }),
+            ]),
+        );
     });
 });
