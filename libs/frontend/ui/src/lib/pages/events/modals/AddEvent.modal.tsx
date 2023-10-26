@@ -16,20 +16,20 @@ import { useEventsMutation } from '@tracelytics/frontend/application';
 import { Field, Formik } from 'formik';
 import { useEffect } from 'react';
 import { MdOutlineEditNote } from 'react-icons/md';
-import { toastError, toastSuccess } from '../../../generic/toast';
+import { toastError, toastSuccess } from '../../../generic';
 
 type Props = {
     isOpen: boolean;
-    handleClose: () => void;
+    onClose: () => void;
 };
 
-export const AddEventModal = ({ isOpen, handleClose }: Props) => {
+export const AddEventModal = ({ isOpen, onClose }: Props) => {
     const { createMutation } = useEventsMutation();
     const toast = useToast();
 
     useEffect(() => {
         if (createMutation.isSuccess) {
-            handleClose();
+            onClose();
             toastSuccess(toast, 'Event added');
         }
 
@@ -39,9 +39,9 @@ export const AddEventModal = ({ isOpen, handleClose }: Props) => {
     }, [createMutation.status]);
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} isCentered>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
-            <ModalContent p={[5]} rounded={25}>
+            <ModalContent>
                 <Formik
                     initialValues={{ name: '' }}
                     onSubmit={values => {
@@ -50,11 +50,11 @@ export const AddEventModal = ({ isOpen, handleClose }: Props) => {
                 >
                     {({ handleSubmit }: { handleSubmit: any }) => (
                         <form onSubmit={handleSubmit}>
-                            <ModalBody p={0} mb={5}>
+                            <ModalBody mb={5}>
                                 <Flex direction={'column'} gap={3}>
                                     <Flex alignItems={'center'} gap={1} w={'100%'}>
                                         <Flex w={'10%'}>
-                                            <Icon as={MdOutlineEditNote} color={'gray.600'} boxSize={'30px'} />
+                                            <Icon as={MdOutlineEditNote} color={'gray.100'} boxSize={'30px'} />
                                         </Flex>
 
                                         <FormControl w={'90%'}>
@@ -79,7 +79,7 @@ export const AddEventModal = ({ isOpen, handleClose }: Props) => {
                                         Add
                                     </Button>
 
-                                    <Button onClick={handleClose} bg={'gray.400'}>
+                                    <Button onClick={onClose} bg={'gray.400'}>
                                         Cancel
                                     </Button>
 

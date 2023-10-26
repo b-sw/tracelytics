@@ -3,6 +3,7 @@ const buttonDefaultVariant = () => {
         rounded: 'full',
         color: 'gray.50',
         textColor: 'gray.50',
+        shadow: 'base',
     };
 };
 

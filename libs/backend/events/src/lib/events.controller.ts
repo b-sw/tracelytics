@@ -3,6 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateEventDto, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
 import { EventsService } from './events.service';
 import { EventParams } from './params/event.params';
+import { RegisteredEvent } from './registered-event.schema';
 
 @ApiTags(EventsController.API_TAG)
 @Controller('')
@@ -23,21 +24,21 @@ export class EventsController {
         return this._eventsService.create(dto);
     }
 
-    @Post(`${EventsController.API_TAG}/:eventName`)
+    @Post(`${EventsController.API_TAG}/:eventId`)
     @ApiOperation({ summary: 'Register event' })
-    registerEvent(@Param() { name }: EventParams, @Body() dto: RegisterEventDto): Promise<TrackableEvent> {
-        return this._eventsService.register(name, dto);
+    registerEvent(@Param() { eventId }: EventParams, @Body() dto: RegisterEventDto): Promise<RegisteredEvent> {
+        return this._eventsService.register(eventId, dto);
     }
 
-    @Delete(`${EventsController.API_TAG}/:eventName`)
+    @Delete(`${EventsController.API_TAG}/:eventId`)
     @ApiOperation({ summary: 'Delete event' })
-    deleteEvent(@Param() { name }: EventParams): Promise<void> {
-        return this._eventsService.delete(name);
+    deleteEvent(@Param() { eventId }: EventParams): Promise<void> {
+        return this._eventsService.delete(eventId);
     }
 
-    @Put(`${EventsController.API_TAG}/:eventName`)
+    @Put(`${EventsController.API_TAG}/:eventId`)
     @ApiOperation({ summary: 'Update event' })
-    updateEvent(@Param() { name }: EventParams, @Body() dto: CreateEventDto): Promise<TrackableEvent> {
-        return this._eventsService.update(name, dto);
+    updateEvent(@Param() { eventId }: EventParams, @Body() dto: CreateEventDto): Promise<TrackableEvent> {
+        return this._eventsService.update(eventId, dto);
     }
 }

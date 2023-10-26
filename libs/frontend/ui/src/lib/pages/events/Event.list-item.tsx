@@ -1,7 +1,6 @@
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { DeleteIcon } from '@chakra-ui/icons';
 import {
     Badge,
-    Checkbox,
     CircularProgress,
     CircularProgressLabel,
     Flex,
@@ -17,14 +16,14 @@ import { ListItem } from '../../generic';
 
 type Props = {
     event: TrackableEvent | null;
+    handleDelete?: () => void;
 };
 
-export const EventListItem = ({ event }: Props) => {
+export const EventListItem = ({ event, handleDelete }: Props) => {
     return (
         <ListItem>
             <Flex gap={4} alignItems={'center'} w={'100%'} role={'group'}>
                 <Flex w={'35%'} gap={4} ml={2} alignItems={'center'}>
-                    {event ? <Checkbox variant={'circular'} /> : <Skeleton rounded={'full'} w={'20px'} h={'20px'} />}
                     {event ? (
                         <Text fontSize={'lg'}>{event!.name}</Text>
                     ) : (
@@ -57,7 +56,7 @@ export const EventListItem = ({ event }: Props) => {
                 </Flex>
 
                 <Spacer />
-                <EventActions />
+                <EventActions handleDelete={handleDelete} />
             </Flex>
         </ListItem>
     );
@@ -106,31 +105,36 @@ const CategoryBadge = ({ event }: { event: TrackableEvent | null }) => {
     );
 };
 
-const EventActions = () => {
+const EventActions = ({ handleDelete }: { handleDelete?: () => void }) => {
+    if (!handleDelete) {
+        return null;
+    }
+
     return (
         <Flex _hover={{ child: { display: 'inherit' } }}>
             <Flex gap={2}>
+                {/*<IconButton*/}
+                {/*    color={'gray.600'}*/}
+                {/*    rounded={'full'}*/}
+                {/*    variant={'ghost'}*/}
+                {/*    aria-label="edit"*/}
+                {/*    icon={<EditIcon />}*/}
+                {/*    opacity={0}*/}
+                {/*    cursor={'default'}*/}
+                {/*    _groupHover={{*/}
+                {/*        opacity: 1,*/}
+                {/*        cursor: 'pointer',*/}
+                {/*    }}*/}
+                {/*/>*/}
                 <IconButton
-                    color={'gray.600'}
-                    rounded={'full'}
-                    variant={'ghost'}
-                    aria-label="edit"
-                    icon={<EditIcon />}
-                    opacity={0}
-                    cursor={'default'}
-                    _groupHover={{
-                        opacity: 1,
-                        cursor: 'pointer',
-                    }}
-                />
-                <IconButton
-                    color={'gray.600'}
+                    color={'red.600'}
                     rounded={'full'}
                     variant={'ghost'}
                     aria-label="delete"
                     icon={<DeleteIcon />}
                     opacity={0}
                     cursor={'default'}
+                    onClick={handleDelete}
                     _groupHover={{
                         opacity: 1,
                         cursor: 'pointer',

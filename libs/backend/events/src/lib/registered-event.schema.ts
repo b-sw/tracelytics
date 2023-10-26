@@ -6,7 +6,7 @@ export type RegisteredEventDocument = HydratedDocument<RegisteredEvent>;
 @Schema()
 export class RegisteredEvent {
     @Prop()
-    name: string;
+    trackableEventId: string;
 
     @Prop()
     timestamp: string;

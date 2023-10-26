@@ -50,7 +50,7 @@ describe('AppService', () => {
     it('creates event', async () => {
         const event = await service.create(createDtoStub);
 
-        expect(event).toEqual(expect.objectContaining({ ...createDtoStub }));
+        expect(event).toEqual({ id: expect.any(String), ...createDtoStub });
     });
 
     it('does not create event with existing name', async () => {
@@ -62,25 +62,17 @@ describe('AppService', () => {
     });
 
     it('registers created event', async () => {
-        await service.create(createDtoStub);
+        const createdEvent = await service.create(createDtoStub);
 
-        const registeredEvent = await service.register(eventNameStub, registerDtoStub);
+        const registeredEvent = await service.register(createdEvent.id, registerDtoStub);
 
-        expect(registeredEvent).toEqual(expect.objectContaining({ ...registerDtoStub }));
+        expect(registeredEvent).toEqual({ trackableEventId: createdEvent.id, ...registerDtoStub });
     });
 
     it('does not register non-existing event', async () => {
         const registerFn = async () => await service.register(eventNameStub, registerDtoStub);
 
         await expect(registerFn).rejects.toThrow();
-    });
-
-    it('finds event', async () => {
-        const createdEvent = await service.create(createDtoStub);
-
-        const event = await service.find(createdEvent.name);
-
-        expect(event).toEqual(expect.objectContaining({ ...createDtoStub }));
     });
 
     it('finds all events', async () => {
@@ -90,8 +82,8 @@ describe('AppService', () => {
 
         expect(await service.findAll()).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ ...createDtoStub }),
-                expect.objectContaining({ ...createDto2Stub }),
+                expect.objectContaining({ id: expect.any(String), ...createDtoStub }),
+                expect.objectContaining({ id: expect.any(String), ...createDto2Stub }),
             ]),
         );
     });
@@ -99,9 +91,9 @@ describe('AppService', () => {
     it('deletes event', async () => {
         const createdEvent = await service.create(createDtoStub);
 
-        await service.delete(createdEvent.name);
+        await service.delete(createdEvent.id);
 
-        expect(await service.find(createdEvent.name)).toBeNull();
+        expect((await service.findAll()).length).toBe(0);
     });
 
     it('throws on delete for non-existing event', async () => {
@@ -114,7 +106,7 @@ describe('AppService', () => {
         const createdEvent = await service.create(createDtoStub);
         const dto2Stub = { name: 'Test Event2' };
 
-        const updatedEvent = await service.update(createdEvent.name, dto2Stub);
+        const updatedEvent = await service.update(createdEvent.id, dto2Stub);
 
         expect(updatedEvent).toEqual(expect.objectContaining({ ...dto2Stub }));
     });

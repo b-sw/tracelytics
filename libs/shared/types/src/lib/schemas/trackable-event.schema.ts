@@ -6,6 +6,9 @@ export type TrackableEventDocument = HydratedDocument<TrackableEvent>;
 @Schema()
 export class TrackableEvent {
     @Prop({ unique: true })
+    id: string;
+
+    @Prop({ unique: true })
     name: string;
 }
 

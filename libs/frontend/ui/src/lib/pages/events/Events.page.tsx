@@ -1,14 +1,18 @@
 import { AddIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, useDisclosure } from '@chakra-ui/react';
 import { useEventsQuery } from '@tracelytics/frontend/application';
-import { useEffect } from 'react';
-import { Dashboard, SearchInput, Table, TableItems } from '../../generic';
+import { TrackableEvent } from '@tracelytics/shared/types';
+import { useEffect, useState } from 'react';
+import { Dashboard, NoRecords, SearchInput, Table, TableItems } from '../../generic';
 import { EventListItem } from './Event.list-item';
 import { AddEventModal } from './modals/AddEvent.modal';
+import { RemoveEventModal } from './modals/RemoveEvent.modal';
 
 export const EventsPage = () => {
     const { events, eventsAreLoading, fetchEvents } = useEventsQuery();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [eventToRemove, setEventToRemove] = useState<TrackableEvent | null>(null);
+    const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure();
+    const { isOpen: isRemoveOpen, onOpen: onRemoveOpen, onClose: onRemoveClose } = useDisclosure();
 
     useEffect(() => {
         fetchEvents();
@@ -19,12 +23,25 @@ export const EventsPage = () => {
     };
 
     const getEventsListItems = () => {
-        return events.map((event, index) => <EventListItem key={index} event={event} />);
+        if (events.length === 0) {
+            return <NoRecords message={'No events found'} />;
+        }
+        return events.map((event, index) => (
+            <EventListItem
+                key={index}
+                event={event}
+                handleDelete={() => {
+                    setEventToRemove(event);
+                    onRemoveOpen();
+                }}
+            />
+        ));
     };
 
     return (
         <Dashboard>
-            <AddEventModal isOpen={isOpen} handleClose={onClose} />
+            {isAddOpen && <AddEventModal isOpen={isAddOpen} onClose={onAddClose} />}
+            {eventToRemove && <RemoveEventModal event={eventToRemove} isOpen={isRemoveOpen} onClose={onRemoveClose} />}
             <Table>
                 <Flex gap={5}>
                     <IconButton
@@ -39,7 +56,7 @@ export const EventsPage = () => {
                         }}
                         rounded={'full'}
                         icon={<AddIcon />}
-                        onClick={onOpen}
+                        onClick={onAddOpen}
                     />
                     <SearchInput handleChange={() => {}} placeholder={'Search for events'} />
                 </Flex>

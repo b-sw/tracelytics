@@ -16,8 +16,8 @@ export const useEventsMutation = () => {
         return response.data;
     };
 
-    const deleteEvent = async (args: { eventName: string }): Promise<void> => {
-        await axios.delete(`${Endpoint.Events}/${args.eventName}`);
+    const deleteEvent = async (eventId: string): Promise<void> => {
+        await axios.delete(`${Endpoint.Events}/${eventId}`);
     };
 
     const updateEvent = async (args: { eventName: string; dto: CreateEventDto }): Promise<TrackableEvent> => {

@@ -3,6 +3,6 @@ import { Length } from 'class-validator';
 
 export class EventParams {
     @ApiProperty({ type: String })
-    @Length(5, 30)
-    name: string;
+    @Length(11, 11)
+    eventId: string;
 }

@@ -24,6 +24,7 @@ export const MonthPicker = ({ children }: Props) => {
                 _hover={{
                     backgroundColor: 'gray.200',
                 }}
+                shadow={'none'}
             />
 
             <Flex w={'40%'} fontWeight={'semibold'} fontSize={'2xl'} gap={2}>
@@ -39,6 +40,7 @@ export const MonthPicker = ({ children }: Props) => {
                 _hover={{
                     backgroundColor: 'gray.200',
                 }}
+                shadow={'none'}
             />
             <Spacer />
         </Flex>
