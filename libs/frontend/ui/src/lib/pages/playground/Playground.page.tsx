@@ -1,19 +1,19 @@
-import { Button, Flex, FormControl, Input, Select, Spacer } from '@chakra-ui/react';
+import { Button, Flex, FormControl, Input, Select, Spacer, useToast } from '@chakra-ui/react';
 import { css } from '@emotion/react';
+import { useTracelytics } from '@tracelytics/emitter';
 import { useEventsQuery } from '@tracelytics/frontend/application';
-import { TrackableEvent } from '@tracelytics/shared/types';
 import dayjs from 'dayjs';
 
 import { Field, Formik } from 'formik';
-import { Dashboard } from '../../generic';
-
-type SelectOption = {
-    value: TrackableEvent;
-    label: string;
-};
+import { useState } from 'react';
+import { Dashboard, toastError } from '../../generic';
 
 export const PlaygroundPage = () => {
+    const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const { events } = useEventsQuery();
+    const { emitEvent } = useTracelytics();
+    const toast = useToast();
+
     const getSelectOptions = () => {
         if (!events) {
             return null;
@@ -33,17 +33,15 @@ export const PlaygroundPage = () => {
                 <Flex alignItems={'center'}>
                     <Formik
                         initialValues={{
-                            eventId: '',
                             timestamp: dayjs().format('YYYY-MM-DD'),
                         }}
                         onSubmit={values => {
-                            // createMutation.mutate({
-                            //     ...values,
-                            //     duration: Number(values.duration),
-                            //     trainingDate: dayjs(values.trainingDate, DATETIME_FORMAT).toDate(),
-                            //     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            //     userId: currentUserId,
-                            // });
+                            console.log('values', values.timestamp, selectedEventId);
+                            if (!selectedEventId || !dayjs(values.timestamp).isValid()) {
+                                toastError(toast, 'Invalid input');
+                            } else {
+                                emitEvent(selectedEventId, dayjs(values.timestamp));
+                            }
                         }}
                     >
                         {({ handleSubmit }: { handleSubmit: any }) => (
@@ -54,11 +52,15 @@ export const PlaygroundPage = () => {
                                             <Select
                                                 rounded={'full'}
                                                 name={'events'}
-                                                onChange={selection => {}}
+                                                placeholder={'Select event'}
+                                                onChange={selection => {
+                                                    setSelectedEventId(selection.target.value);
+                                                }}
                                                 bg={'gray.50'}
                                                 textColor={'gray.800'}
                                                 iconColor={'gray.800'}
                                                 shadow={'md'}
+                                                disabled={!events}
                                             >
                                                 {getSelectOptions()}
                                             </Select>
@@ -76,18 +78,15 @@ export const PlaygroundPage = () => {
                                                     }
                                                 `}
                                                 as={Input}
-                                                name="eventDate"
-                                                id="eventDate"
+                                                name="timestamp"
+                                                id="timestamp"
                                                 type="date"
                                                 shadow={'md'}
+                                                disabled={!events}
                                             />
                                         </FormControl>
 
-                                        <Button
-                                            type="submit"
-                                            // isLoading={createMutation.isLoading}
-                                            bg={'blue.500'}
-                                        >
+                                        <Button type="submit" bg={'blue.500'} isDisabled={!events}>
                                             Emit
                                         </Button>
                                     </Flex>

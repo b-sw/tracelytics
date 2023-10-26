@@ -9,6 +9,7 @@ export const EventsPickerTile = () => {
     const calendarState = useInjection(CalendarState);
     const selectedDateRange = useSubscriptionState(calendarState.selectedDateRange$, calendarState.selectedDateRange);
     const { events, fetchEvents, eventsAreLoading } = usePeriodEventsQuery(selectedDateRange);
+    const maxEventCount = Math.max(...(events?.map(event => event.count) || []));
 
     useEffect(() => {
         fetchEvents();
@@ -17,7 +18,8 @@ export const EventsPickerTile = () => {
     const getLoadedEvents = () => {
         if (events.length === 0) {
             return <NoRecords message={'No events found in the specified date range'} />;
-        } else return events.map((event, index) => <LegendListItem key={index} event={event} />);
+        } else
+            return events.map((event, index) => <LegendListItem key={index} event={event} maxCount={maxEventCount} />);
     };
 
     const getSkeletonLoading = () => {

@@ -17,9 +17,10 @@ import { ListItem } from '../../../generic';
 
 type Props = {
     event: PeriodEvent | null;
+    maxCount?: number;
 };
 
-export const LegendListItem = ({ event }: Props) => {
+export const LegendListItem = ({ event, maxCount }: Props) => {
     const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
 
     return (
@@ -46,10 +47,10 @@ export const LegendListItem = ({ event }: Props) => {
                 </Flex>
 
                 <Flex w={'10%'}>
-                    {event ? (
-                        <CircularProgress value={75} color={'tcs.500'} size={'40px'}>
+                    {event && maxCount ? (
+                        <CircularProgress value={(event.count / maxCount) * 100} color={'tcs.500'} size={'40px'}>
                             <CircularProgressLabel>
-                                <Text fontSize={'xs'}>{event?.count}</Text>
+                                <Text fontSize={'xs'}>{event.count}</Text>
                             </CircularProgressLabel>
                         </CircularProgress>
                     ) : (

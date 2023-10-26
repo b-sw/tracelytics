@@ -19,6 +19,7 @@
         "paths": {
             "@tracelytics/backend/auth": ["libs/backend/auth/src/index.ts"],
             "@tracelytics/backend/events": ["libs/backend/events/src/index.ts"],
+            "@tracelytics/emitter": ["libs/emitter/src/index.ts"],
             "@tracelytics/frontend/application": ["libs/frontend/application/src/index.ts"],
             "@tracelytics/frontend/domain": ["libs/frontend/domain/src/index.ts"],
             "@tracelytics/frontend/ui": ["libs/frontend/ui/src/index.ts"],

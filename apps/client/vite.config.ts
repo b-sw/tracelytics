@@ -29,6 +29,7 @@ export default defineConfig({
             '@tracelytics/frontend/domain': resolve('libs/frontend/domain/src/index.ts'),
             '@tracelytics/frontend/application': resolve('libs/frontend/application/src/index.ts'),
             '@tracelytics/frontend/ui': resolve('libs/frontend/ui/src/index.ts'),
+            '@tracelytics/emitter': resolve('libs/emitter/src/index.ts'),
             '@tracelytics/shared/di': resolve('libs/shared/di/src/index.ts'),
             '@tracelytics/shared/flux': resolve('libs/shared/flux/src/index.ts'),
             '@tracelytics/shared/types': resolve('libs/shared/types/src/index.ts'),
