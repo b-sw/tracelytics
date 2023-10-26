@@ -112,35 +112,20 @@ const EventActions = ({ handleDelete }: { handleDelete?: () => void }) => {
 
     return (
         <Flex _hover={{ child: { display: 'inherit' } }}>
-            <Flex gap={2}>
-                {/*<IconButton*/}
-                {/*    color={'gray.600'}*/}
-                {/*    rounded={'full'}*/}
-                {/*    variant={'ghost'}*/}
-                {/*    aria-label="edit"*/}
-                {/*    icon={<EditIcon />}*/}
-                {/*    opacity={0}*/}
-                {/*    cursor={'default'}*/}
-                {/*    _groupHover={{*/}
-                {/*        opacity: 1,*/}
-                {/*        cursor: 'pointer',*/}
-                {/*    }}*/}
-                {/*/>*/}
-                <IconButton
-                    color={'red.600'}
-                    rounded={'full'}
-                    variant={'ghost'}
-                    aria-label="delete"
-                    icon={<DeleteIcon />}
-                    opacity={0}
-                    cursor={'default'}
-                    onClick={handleDelete}
-                    _groupHover={{
-                        opacity: 1,
-                        cursor: 'pointer',
-                    }}
-                />
-            </Flex>
+            <IconButton
+                color={'red.600'}
+                rounded={'full'}
+                variant={'ghost'}
+                aria-label="delete"
+                icon={<DeleteIcon />}
+                opacity={0}
+                cursor={'default'}
+                onClick={handleDelete}
+                _groupHover={{
+                    opacity: 1,
+                    cursor: 'pointer',
+                }}
+            />
         </Flex>
     );
 };

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateEventDto, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
+import { CreateEventDto, PeriodEvent, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
 import { uuid } from '@tracelytics/shared/utils';
 import { Dayjs } from 'dayjs';
 import { Model } from 'mongoose';
@@ -32,10 +32,7 @@ export class EventsService {
         return { trackableEventId: event.trackableEventId, timestamp: event.timestamp };
     }
 
-    async getRegisteredEventsFromPeriod(
-        startDate: Dayjs,
-        endDate: Dayjs,
-    ): Promise<{ id: TrackableEvent['id']; count: number }[]> {
+    async getRegisteredEventsFromPeriod(startDate: Dayjs, endDate: Dayjs): Promise<PeriodEvent[]> {
         const events = await this.registeredEventModel.aggregate([
             {
                 $match: {
@@ -53,7 +50,16 @@ export class EventsService {
             },
         ]);
 
-        return events.map(event => ({ id: event._id, count: event.count }));
+        const trackableEvents = (await this.findAll()).reduce((acc, event) => {
+            acc.set(event.id, event.name);
+            return acc;
+        }, new Map<string, string>());
+
+        return events.map(event => ({
+            id: event._id,
+            count: event.count,
+            name: trackableEvents.get(event._id) as string,
+        }));
     }
 
     private _find(query: { id: string } | { name: string }): Promise<TrackableEvent | null> {

@@ -47,7 +47,7 @@ export const DayTile = ({ date }: Props) => {
             cursor={'pointer'}
             onMouseDown={() => {
                 calendarState.isSelecting = true;
-                calendarState.selectedDateRange = { start: date, end: null };
+                calendarState.selectedDateRange = { start: date, end: date };
             }}
             onMouseOver={() => {
                 if (calendarState.isSelecting) {

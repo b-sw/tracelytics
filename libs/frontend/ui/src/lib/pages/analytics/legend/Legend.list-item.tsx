@@ -1,82 +1,126 @@
 import { CloseIcon } from '@chakra-ui/icons';
-import { Badge, CircularProgress, CircularProgressLabel, Flex, IconButton, Spacer, Text } from '@chakra-ui/react';
+import {
+    Badge,
+    CircularProgress,
+    CircularProgressLabel,
+    Flex,
+    IconButton,
+    Skeleton,
+    SkeletonText,
+    Spacer,
+    Spinner,
+    Text,
+} from '@chakra-ui/react';
+import { PeriodEvent, TrackableEvent } from '@tracelytics/shared/types';
 import { FaFilter } from 'react-icons/fa';
 import { ListItem } from '../../../generic';
 
-export const LegendListItem = () => {
+type Props = {
+    event: PeriodEvent | null;
+};
+
+export const LegendListItem = ({ event }: Props) => {
     const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
 
     return (
         <ListItem>
             <Flex gap={4} alignItems={'center'} w={'100%'} role={'group'}>
                 <Flex w={'35%'} gap={4} ml={2} alignItems={'center'}>
-                    <Flex
-                        rounded={5}
-                        backgroundColor={randomColor}
-                        w={'20px'}
-                        h={'20px'}
-                        shadow={'base'}
-                        cursor={'pointer'}
-                    />
-                    <Text fontSize={'lg'}>Button clicked</Text>
+                    {event ? (
+                        <Flex
+                            rounded={5}
+                            backgroundColor={randomColor}
+                            w={'20px'}
+                            h={'20px'}
+                            shadow={'base'}
+                            cursor={'pointer'}
+                        />
+                    ) : (
+                        <Skeleton rounded={5} w={'20px'} h={'20px'} shadow={'base'} cursor={'pointer'} />
+                    )}
+                    {event ? (
+                        <Text fontSize={'lg'}>{event.name}</Text>
+                    ) : (
+                        <SkeletonText noOfLines={1} fontSize={'lg'} w={'80%'} skeletonHeight={'4'} />
+                    )}
                 </Flex>
 
                 <Flex w={'10%'}>
-                    <CircularProgress value={75} color={'tcs.500'} size={'40px'}>
-                        <CircularProgressLabel>
-                            <Text fontSize={'xs'}>1324</Text>
-                        </CircularProgressLabel>
-                    </CircularProgress>
+                    {event ? (
+                        <CircularProgress value={75} color={'tcs.500'} size={'40px'}>
+                            <CircularProgressLabel>
+                                <Text fontSize={'xs'}>{event?.count}</Text>
+                            </CircularProgressLabel>
+                        </CircularProgress>
+                    ) : (
+                        <Spinner
+                            thickness="4px"
+                            speed="1s"
+                            emptyColor="gray.200"
+                            color="tcs.500"
+                            w={'40px'}
+                            h={'40px'}
+                        />
+                    )}
                 </Flex>
 
                 <Flex direction={'row'} w={'30%'} gap={2}>
-                    <CategoryBadge />
-                    <StatusBadge />
+                    <CategoryBadge event={event} />
+                    <StatusBadge event={event} />
                 </Flex>
 
                 <Spacer />
-                <EventActions />
+                <EventActions event={event} />
             </Flex>
         </ListItem>
     );
 };
 
-const StatusBadge = () => {
+// TODO: copy-pasted for now
+const StatusBadge = ({ event }: { event: TrackableEvent | null }) => {
     return (
         <Flex>
-            <Badge
-                fontSize={'12'}
-                fontWeight={'italic'}
-                textColor={'green.700'}
-                backgroundColor={'green.50'}
-                border={'1px'}
-                borderRadius={15}
-            >
-                <Text px={1}>Active</Text>
-            </Badge>
+            {event ? (
+                <Badge
+                    fontSize={'12'}
+                    fontWeight={'italic'}
+                    textColor={'green.700'}
+                    backgroundColor={'green.50'}
+                    border={'1px'}
+                    borderRadius={15}
+                >
+                    <Text px={1}>Active</Text>
+                </Badge>
+            ) : (
+                <Skeleton w={'60px'} h={'18px'} borderRadius={15} />
+            )}
         </Flex>
     );
 };
 
-const CategoryBadge = () => {
+const CategoryBadge = ({ event }: { event: TrackableEvent | null }) => {
     return (
         <Flex>
-            <Badge
-                variant={'solid'}
-                fontWeight={'semibold'}
-                backgroundColor={'gray.300'}
-                textColor={'gray.800'}
-                alignSelf={'center'}
-                borderRadius={15}
-                letterSpacing={'.5px'}
-            >
-                <Text px={1}>Event category</Text>
-            </Badge>
+            {event ? (
+                <Badge
+                    variant={'solid'}
+                    fontWeight={'semibold'}
+                    backgroundColor={'gray.300'}
+                    textColor={'gray.800'}
+                    alignSelf={'center'}
+                    borderRadius={15}
+                    letterSpacing={'.5px'}
+                >
+                    <Text px={1}>Event category</Text>
+                </Badge>
+            ) : (
+                <Skeleton w={'132px'} h={'18px'} borderRadius={15} />
+            )}
         </Flex>
     );
 };
 
-const EventActions = () => {
+const EventActions = ({ event }: { event: TrackableEvent | null }) => {
     return (
         <Flex _hover={{ child: { display: 'inherit' } }}>
             <Flex gap={2}>
@@ -87,10 +131,10 @@ const EventActions = () => {
                     aria-label="edit"
                     icon={<FaFilter />}
                     opacity={0}
-                    cursor={'default'}
+                    disabled={!event}
                     _groupHover={{
-                        opacity: 1,
-                        cursor: 'pointer',
+                        opacity: event ? 1 : 0.5,
+                        cursor: event ? 'pointer' : 'default',
                     }}
                 />
                 <IconButton
@@ -100,10 +144,10 @@ const EventActions = () => {
                     aria-label="delete"
                     icon={<CloseIcon />}
                     opacity={0}
-                    cursor={'default'}
+                    disabled={!event}
                     _groupHover={{
-                        opacity: 1,
-                        cursor: 'pointer',
+                        opacity: event ? 1 : 0.5,
+                        cursor: event ? 'pointer' : 'default',
                     }}
                 />
             </Flex>

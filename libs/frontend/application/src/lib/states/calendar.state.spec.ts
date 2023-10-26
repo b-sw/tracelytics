@@ -15,10 +15,10 @@ describe('CalendarState', () => {
         calendarState = testingContainer.get(CalendarState);
     });
 
-    it('date range is none by default', () => {
+    it('date range is today by default', () => {
         expect(calendarState.selectedDateRange).toEqual({
-            start: null,
-            end: null,
+            start: dayjs().startOf('day'),
+            end: dayjs().endOf('day'),
         });
     });
 
@@ -32,7 +32,7 @@ describe('CalendarState', () => {
 
     it('pipes date range on change', () => {
         const dateRangeSpy = jest.fn();
-        const newDateRangeStub = { start: dayjs().startOf('day'), end: null };
+        const newDateRangeStub = { start: dayjs().startOf('day'), end: dayjs().startOf('day') };
         calendarState.selectedDateRange$.subscribe(dateRangeSpy);
 
         calendarState.selectedDateRange = newDateRangeStub;

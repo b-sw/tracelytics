@@ -121,7 +121,6 @@ describe('AppService', () => {
         const createDto2Stub = { name: 'Test Event2' };
         const createdEvent = await service.create(createDtoStub);
         const createdEvent2 = await service.create(createDto2Stub);
-
         await service.register(createdEvent.id, { timestamp: dayjs('2021-01-01').toISOString() });
         await service.register(createdEvent.id, { timestamp: dayjs('2021-01-02').toISOString() });
         await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-02').toISOString() });
@@ -131,8 +130,25 @@ describe('AppService', () => {
 
         expect(registeredEvents).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ id: createdEvent.id, count: 1 }),
-                expect.objectContaining({ id: createdEvent2.id, count: 2 }),
+                expect.objectContaining({ id: createdEvent.id, count: 1, name: createdEvent.name }),
+                expect.objectContaining({ id: createdEvent2.id, count: 2, name: createdEvent2.name }),
+            ]),
+        );
+    });
+
+    it('does not get unregistered events from period', async () => {
+        const createDto2Stub = { name: 'Test Event2' };
+        const createdEvent = await service.create(createDtoStub);
+        const createdEvent2 = await service.create(createDto2Stub);
+        await service.register(createdEvent.id, { timestamp: dayjs('2021-01-01').toISOString() });
+        await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-02').toISOString() });
+        await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-03').toISOString() });
+
+        const registeredEvents = await service.getRegisteredEventsFromPeriod(dayjs('2021-01-02'), dayjs('2021-01-03'));
+
+        expect(registeredEvents).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ id: createdEvent2.id, count: 2, name: createdEvent2.name }),
             ]),
         );
     });

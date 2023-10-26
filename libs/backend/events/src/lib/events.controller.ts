@@ -1,6 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateEventDto, DATE_FORMAT, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
+import {
+    CreateEventDto,
+    DATE_FORMAT,
+    PeriodEvent,
+    PeriodEventsDto,
+    RegisterEventDto,
+    TrackableEvent,
+} from '@tracelytics/shared/types';
 import dayjs from 'dayjs';
 import { InvalidDateFormatError, InvalidDateRangeError } from './errors';
 import { EventsService } from './events.service';
@@ -32,16 +39,14 @@ export class EventsController {
         return this._eventsService.register(eventId, dto);
     }
 
-    @Post(`${EventsController.API_TAG}/period`)
+    @Post(`period-${EventsController.API_TAG}`)
     @ApiOperation({ summary: 'Get registered events from period' })
-    getRegisteredEventsFromPeriod(
-        @Body() { startDate, endDate }: { startDate: string; endDate: string },
-    ): Promise<{ id: TrackableEvent['id']; count: number }[]> {
-        this._requireValidPeriod(startDate, endDate);
+    getRegisteredEventsFromPeriod(@Body() { periodStart, periodEnd }: PeriodEventsDto): Promise<PeriodEvent[]> {
+        this._requireValidPeriod(periodStart, periodEnd);
 
         return this._eventsService.getRegisteredEventsFromPeriod(
-            dayjs(startDate, DATE_FORMAT),
-            dayjs(endDate, DATE_FORMAT),
+            dayjs(periodStart, DATE_FORMAT),
+            dayjs(periodEnd, DATE_FORMAT),
         );
     }
 

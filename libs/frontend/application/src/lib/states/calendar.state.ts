@@ -9,8 +9,8 @@ export class CalendarState extends State<CalendarStateModel> {
     static readonly DEFAULT_STATE: CalendarStateModel = {
         switchDirection: null,
         selectedDateRange: {
-            start: null,
-            end: null,
+            start: dayjs().startOf('day'),
+            end: dayjs().endOf('day'),
         },
         currentMonth: dayjs().startOf('month'),
         currentMonthDays: getMonthDays(dayjs()),
