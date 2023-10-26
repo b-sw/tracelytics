@@ -6,6 +6,7 @@ import { Page } from '../generic';
 import { Sidebar } from '../sidebar/Sidebar';
 import { AnalyticsPage } from './analytics/Analytics.page';
 import { EventsPage } from './events/Events.page';
+import { PlaygroundPage } from './playground/Playground.page';
 
 export const MainDashboard = () => {
     const routes = useMemo(
@@ -15,6 +16,7 @@ export const MainDashboard = () => {
 
                 <Route path={Path.ANALYTICS} element={<AnalyticsPage />} />
                 <Route path={Path.EVENTS} element={<EventsPage />} />
+                <Route path={Path.PLAYGROUND} element={<PlaygroundPage />} />
             </Routes>
         ),
         [],

@@ -3,4 +3,5 @@ export enum Path {
     DASHBOARD = '/dashboard',
     ANALYTICS = '/analytics',
     EVENTS = '/events',
+    PLAYGROUND = '/playground',
 }

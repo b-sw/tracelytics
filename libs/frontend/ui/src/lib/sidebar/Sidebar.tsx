@@ -1,7 +1,7 @@
 import { Avatar, Flex, Spacer, Text } from '@chakra-ui/react';
 import { Path } from '@tracelytics/frontend/domain';
 import { FaTimeline } from 'react-icons/fa6';
-import { MdBarChart } from 'react-icons/md';
+import { MdBarChart, MdFastRewind } from 'react-icons/md';
 import { NavigationButton } from './Navigation.button';
 
 export const Sidebar = () => {
@@ -45,6 +45,7 @@ const Navigation = () => {
         <Flex gap={5}>
             <NavigationButton path={Path.ANALYTICS} icon={MdBarChart} description={'Analytics'} />
             <NavigationButton path={Path.EVENTS} icon={FaTimeline} description={'Events'} />
+            <NavigationButton path={Path.PLAYGROUND} icon={MdFastRewind} description={'Playground'} />
         </Flex>
     );
 };
