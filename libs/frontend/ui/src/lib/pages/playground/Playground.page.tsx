@@ -37,7 +37,6 @@ export const PlaygroundPage = () => {
                             timestamp: dayjs().format(DATE_FORMAT),
                         }}
                         onSubmit={values => {
-                            console.log('values', values.timestamp, selectedEventId);
                             if (!selectedEventId || !dayjs(values.timestamp).isValid()) {
                                 toastError(toast, 'Invalid input');
                             } else {

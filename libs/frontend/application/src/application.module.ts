@@ -1,8 +1,8 @@
 import { Module } from '@tracelytics/shared/di';
-import { CalendarState } from './lib/states';
+import { CalendarState, ChartState } from './lib/states';
 
 @Module({
     imports: [],
-    providers: [CalendarState],
+    providers: [CalendarState, ChartState],
 })
 export class ApplicationModule {}

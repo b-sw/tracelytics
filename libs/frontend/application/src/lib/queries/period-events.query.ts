@@ -4,14 +4,15 @@ import { useSubscriptionState } from '@tracelytics/shared/flux';
 import { PeriodEvent } from '@tracelytics/shared/types';
 import axios from 'axios';
 import { useQuery } from 'react-query';
+import { useEventsQuery } from '.';
 import { CalendarState } from '../states';
 
 export const usePeriodEventsQuery = () => {
     const calendarState = useInjection(CalendarState);
     const { start, end } = useSubscriptionState(calendarState.selectedDateRange$, calendarState.selectedDateRange);
+    const { eventsAreLoading: trackableEventsAreLoading } = useEventsQuery();
 
     const getPeriodEvents = async (): Promise<PeriodEvent[]> => {
-        // sort out the date range
         const [periodStart, periodEnd] = [start, end].sort((a, b) => a.diff(b, 'day'));
         const response = await axios.post(Endpoint.PeriodEvents, { periodStart, periodEnd });
 
@@ -31,7 +32,7 @@ export const usePeriodEventsQuery = () => {
     return {
         fetchEvents: eventsQuery.refetch,
         events: eventsQuery.data,
-        eventsAreLoading: eventsQuery.isIdle || eventsQuery.isLoading,
+        eventsAreLoading: eventsQuery.isIdle || eventsQuery.isLoading || trackableEventsAreLoading,
     } as { fetchEvents: () => void; events: PeriodEvent[]; eventsAreLoading: boolean };
 };
 

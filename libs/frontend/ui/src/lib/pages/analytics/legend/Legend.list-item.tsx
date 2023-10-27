@@ -11,6 +11,9 @@ import {
     Spinner,
     Text,
 } from '@chakra-ui/react';
+import { ChartState } from '@tracelytics/frontend/application';
+import { useInjection } from '@tracelytics/shared/di';
+import { useSubscriptionState } from '@tracelytics/shared/flux';
 import { PeriodEvent, TrackableEvent } from '@tracelytics/shared/types';
 import { FaFilter } from 'react-icons/fa';
 import { ListItem } from '../../../generic';
@@ -21,7 +24,8 @@ type Props = {
 };
 
 export const LegendListItem = ({ event, maxCount }: Props) => {
-    const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    const { eventColors$, eventColors } = useInjection(ChartState);
+    const colors = useSubscriptionState(eventColors$, eventColors);
 
     return (
         <ListItem>
@@ -30,7 +34,7 @@ export const LegendListItem = ({ event, maxCount }: Props) => {
                     {event ? (
                         <Flex
                             rounded={5}
-                            backgroundColor={randomColor}
+                            backgroundColor={colors.get(event.id)}
                             w={'20px'}
                             h={'20px'}
                             shadow={'base'}

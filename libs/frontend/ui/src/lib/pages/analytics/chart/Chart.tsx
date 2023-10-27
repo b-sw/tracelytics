@@ -1,5 +1,5 @@
-import { Flex, FlexProps, Spacer } from '@chakra-ui/react';
-import { CalendarState, usePeriodEventsQuery } from '@tracelytics/frontend/application';
+import { Flex, FlexProps, Spacer, Spinner } from '@chakra-ui/react';
+import { CalendarState, ChartState, usePeriodEventsQuery } from '@tracelytics/frontend/application';
 import { DATE_FORMAT } from '@tracelytics/frontend/domain';
 import { useInjection } from '@tracelytics/shared/di';
 import { useSubscriptionState } from '@tracelytics/shared/flux';
@@ -22,6 +22,9 @@ type Props = {
 };
 
 export const Chart = ({ options }: Props) => {
+    const { eventColors$, eventColors } = useInjection(ChartState);
+    const colors = useSubscriptionState(eventColors$, eventColors);
+
     const { selectedDateRange$, selectedDateRange } = useInjection(CalendarState);
     const dateRange = useSubscriptionState(selectedDateRange$, selectedDateRange);
     const { events } = usePeriodEventsQuery();
@@ -40,28 +43,50 @@ export const Chart = ({ options }: Props) => {
         },
     };
 
-    if (!events || !dateRange) return null;
+    // if (!events)
+    //     return (
+    //         <Flex {...options} width={'full'} height={'full'} alignItems={'center'}>
+    //             <Spacer />
+    //             {/*<Spinner thickness="10px" speed="1s" emptyColor="gray.200" color="tcs.500" w={'200px'} h={'200px'} />*/}
+    //             <Line options={opts} data={{ labels: [], datasets: [] }} />
+    //             <Spacer />
+    //         </Flex>
+    //     );
 
-    const { start, end } = dateRange;
+    // sort date range
+    const [start, end] = [dateRange.start, dateRange.end].sort((a, b) => a.diff(b, 'day'));
     const days = [];
     for (let day = start; day.isBefore(end, 'day') || day.isSame(end, 'day'); day = day.add(1, 'day')) {
         days.push(day);
     }
     const labels = days.map(day => day.format(DATE_FORMAT));
-
-    const datasets = events.map(event => {
-        return {
-            label: event.name,
-            data: labels.map(day => event.counts[day] ?? 0),
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        };
-    });
-
+    const datasets =
+        events?.map(event => {
+            return {
+                label: event.name,
+                data: labels.map(day => event.counts[day] ?? 0),
+                borderColor: colors.get(event.id),
+                backgroundColor: colors.get(event.id),
+            };
+        }) ?? [];
     const data = { labels, datasets };
 
     return (
-        <Flex {...options} width={'full'} height={'full'} alignItems={'center'}>
+        <Flex {...options} width={'full'} height={'full'} alignItems={'center'} position={'relative'}>
+            <Flex position={'absolute'} w={'full'} h={'full'} bg={'none'} alignItems={'center'} pointerEvents={'none'}>
+                <Spacer />
+                {!events && (
+                    <Spinner
+                        thickness="10px"
+                        speed="1s"
+                        emptyColor="gray.200"
+                        color="tcs.500"
+                        w={'200px'}
+                        h={'200px'}
+                    />
+                )}
+                <Spacer />
+            </Flex>
             <Spacer />
             <Line options={opts} data={data} />
             <Spacer />
