@@ -1,4 +1,8 @@
 import { Flex, FlexProps, Spacer } from '@chakra-ui/react';
+import { CalendarState, usePeriodEventsQuery } from '@tracelytics/frontend/application';
+import { DATE_FORMAT } from '@tracelytics/frontend/domain';
+import { useInjection } from '@tracelytics/shared/di';
+import { useSubscriptionState } from '@tracelytics/shared/flux';
 import {
     CategoryScale,
     Chart as ChartJS,
@@ -18,6 +22,10 @@ type Props = {
 };
 
 export const Chart = ({ options }: Props) => {
+    const { selectedDateRange$, selectedDateRange } = useInjection(CalendarState);
+    const dateRange = useSubscriptionState(selectedDateRange$, selectedDateRange);
+    const { events } = usePeriodEventsQuery();
+
     const opts = {
         responsive: true,
         plugins: {
@@ -32,25 +40,25 @@ export const Chart = ({ options }: Props) => {
         },
     };
 
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    if (!events || !dateRange) return null;
 
-    const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: labels.map(() => (Math.random() * 1000).toFixed(2)),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-                label: 'Dataset 2',
-                data: labels.map(() => (Math.random() * 1000).toFixed(2)),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-        ],
-    };
+    const { start, end } = dateRange;
+    const days = [];
+    for (let day = start; day.isBefore(end, 'day') || day.isSame(end, 'day'); day = day.add(1, 'day')) {
+        days.push(day);
+    }
+    const labels = days.map(day => day.format(DATE_FORMAT));
+
+    const datasets = events.map(event => {
+        return {
+            label: event.name,
+            data: labels.map(day => event.counts[day] ?? 0),
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        };
+    });
+
+    const data = { labels, datasets };
 
     return (
         <Flex {...options} width={'full'} height={'full'} alignItems={'center'}>

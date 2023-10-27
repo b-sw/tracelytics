@@ -2,6 +2,7 @@ import { Button, Flex, FormControl, Input, Select, Spacer, useToast } from '@cha
 import { css } from '@emotion/react';
 import { useTracelytics } from '@tracelytics/emitter';
 import { useEventsQuery } from '@tracelytics/frontend/application';
+import { DATE_FORMAT } from '@tracelytics/frontend/domain';
 import dayjs from 'dayjs';
 
 import { Field, Formik } from 'formik';
@@ -33,7 +34,7 @@ export const PlaygroundPage = () => {
                 <Flex alignItems={'center'}>
                     <Formik
                         initialValues={{
-                            timestamp: dayjs().format('YYYY-MM-DD'),
+                            timestamp: dayjs().format(DATE_FORMAT),
                         }}
                         onSubmit={values => {
                             console.log('values', values.timestamp, selectedEventId);

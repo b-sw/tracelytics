@@ -1,9 +1,9 @@
 import { Flex, Spacer, Text } from '@chakra-ui/react';
 import { CalendarState } from '@tracelytics/frontend/application';
 import { useInjection } from '@tracelytics/shared/di';
+import { useSubscriptionState } from '@tracelytics/shared/flux';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/plugin/isBetween';
-import { useSubscriptionState } from '../../../generic';
 
 type Props = {
     date: Dayjs;

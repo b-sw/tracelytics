@@ -1,14 +1,11 @@
 import { Flex } from '@chakra-ui/react';
-import { CalendarState, usePeriodEventsQuery } from '@tracelytics/frontend/application';
-import { useInjection } from '@tracelytics/shared/di';
+import { usePeriodEventsQuery } from '@tracelytics/frontend/application';
 import { useEffect } from 'react';
-import { NoRecords, SearchInput, TableItems, useSubscriptionState } from '../../../generic';
+import { NoRecords, SearchInput, TableItems } from '../../../generic';
 import { LegendListItem } from './Legend.list-item';
 
 export const EventsPickerTile = () => {
-    const calendarState = useInjection(CalendarState);
-    const selectedDateRange = useSubscriptionState(calendarState.selectedDateRange$, calendarState.selectedDateRange);
-    const { events, fetchEvents, eventsAreLoading } = usePeriodEventsQuery(selectedDateRange);
+    const { events, fetchEvents, eventsAreLoading } = usePeriodEventsQuery();
     const maxEventCount = Math.max(...(events?.map(event => event.totalCount) || []));
 
     useEffect(() => {

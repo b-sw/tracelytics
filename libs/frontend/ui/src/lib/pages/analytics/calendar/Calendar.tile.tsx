@@ -1,7 +1,8 @@
 import { Flex, SlideFade, Spacer, Text } from '@chakra-ui/react';
 import { CalendarState } from '@tracelytics/frontend/application';
 import { useInjection } from '@tracelytics/shared/di';
-import { DashboardTile, useSubscriptionState } from '../../../generic';
+import { useSubscriptionState } from '@tracelytics/shared/flux';
+import { DashboardTile } from '../../../generic';
 import { DaysGrid } from './Days.grid';
 import { MonthPicker } from './MonthPicker';
 

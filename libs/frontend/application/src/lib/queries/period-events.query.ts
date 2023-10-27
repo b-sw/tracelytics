@@ -1,9 +1,15 @@
-import { DateRange, DEFAULT_QUERY_OPTIONS, Endpoint, QueryKey } from '@tracelytics/frontend/domain';
+import { DEFAULT_QUERY_OPTIONS, Endpoint, QueryKey } from '@tracelytics/frontend/domain';
+import { useInjection } from '@tracelytics/shared/di';
+import { useSubscriptionState } from '@tracelytics/shared/flux';
 import { PeriodEvent } from '@tracelytics/shared/types';
 import axios from 'axios';
 import { useQuery } from 'react-query';
+import { CalendarState } from '../states';
 
-export const usePeriodEventsQuery = ({ start, end }: DateRange) => {
+export const usePeriodEventsQuery = () => {
+    const calendarState = useInjection(CalendarState);
+    const { start, end } = useSubscriptionState(calendarState.selectedDateRange$, calendarState.selectedDateRange);
+
     const getPeriodEvents = async (): Promise<PeriodEvent[]> => {
         // sort out the date range
         const [periodStart, periodEnd] = [start, end].sort((a, b) => a.diff(b, 'day'));

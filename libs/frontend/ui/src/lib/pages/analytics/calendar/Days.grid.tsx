@@ -1,7 +1,7 @@
 import { Flex, Grid, SlideFade, Text } from '@chakra-ui/react';
 import { CalendarState } from '@tracelytics/frontend/application';
 import { useInjection } from '@tracelytics/shared/di';
-import { useSubscriptionState } from '../../../generic';
+import { useSubscriptionState } from '@tracelytics/shared/flux';
 import { DayTile } from './Day.tile';
 
 export const DaysGrid = () => {
