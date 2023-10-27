@@ -27,6 +27,7 @@ export const App = () => {
                     <Router basename="/">
                         <Routes>
                             {/*<Route path={Path.LANDING_PAGE} element={<LandingPage />} />*/}
+
                             <Route path={`${Path.DASHBOARD}/*`} element={<MainDashboard />} />
                             <Route path={'*'} element={<Navigate to={Path.DASHBOARD} replace />} />
                         </Routes>
