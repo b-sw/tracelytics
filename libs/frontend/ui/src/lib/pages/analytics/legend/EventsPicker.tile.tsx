@@ -9,7 +9,7 @@ export const EventsPickerTile = () => {
     const calendarState = useInjection(CalendarState);
     const selectedDateRange = useSubscriptionState(calendarState.selectedDateRange$, calendarState.selectedDateRange);
     const { events, fetchEvents, eventsAreLoading } = usePeriodEventsQuery(selectedDateRange);
-    const maxEventCount = Math.max(...(events?.map(event => event.count) || []));
+    const maxEventCount = Math.max(...(events?.map(event => event.totalCount) || []));
 
     useEffect(() => {
         fetchEvents();

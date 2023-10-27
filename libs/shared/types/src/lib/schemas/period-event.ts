@@ -3,5 +3,8 @@ import { TrackableEvent } from '.';
 export type PeriodEvent = {
     id: TrackableEvent['id'];
     name: string;
-    count: number;
+    counts: {
+        [date: string]: number;
+    };
+    totalCount: number;
 };

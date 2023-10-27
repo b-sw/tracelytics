@@ -48,9 +48,9 @@ export const LegendListItem = ({ event, maxCount }: Props) => {
 
                 <Flex w={'10%'}>
                     {event && maxCount ? (
-                        <CircularProgress value={(event.count / maxCount) * 100} color={'tcs.500'} size={'40px'}>
+                        <CircularProgress value={(event.totalCount / maxCount) * 100} color={'tcs.500'} size={'40px'}>
                             <CircularProgressLabel>
-                                <Text fontSize={'xs'}>{event.count}</Text>
+                                <Text fontSize={'xs'}>{event.totalCount}</Text>
                             </CircularProgressLabel>
                         </CircularProgress>
                     ) : (

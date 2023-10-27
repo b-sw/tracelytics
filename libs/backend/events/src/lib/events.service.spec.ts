@@ -125,13 +125,29 @@ describe('AppService', () => {
         await service.register(createdEvent.id, { timestamp: dayjs('2021-01-02').toISOString() });
         await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-02').toISOString() });
         await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-03').toISOString() });
+        await service.register(createdEvent2.id, { timestamp: dayjs('2021-01-03').toISOString() });
 
         const registeredEvents = await service.getRegisteredEventsFromPeriod(dayjs('2021-01-02'), dayjs('2021-01-03'));
 
         expect(registeredEvents).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ id: createdEvent.id, count: 1, name: createdEvent.name }),
-                expect.objectContaining({ id: createdEvent2.id, count: 2, name: createdEvent2.name }),
+                expect.objectContaining({
+                    id: createdEvent.id,
+                    name: createdEvent.name,
+                    counts: {
+                        '2021-01-02': 1,
+                    },
+                    totalCount: 1,
+                }),
+                expect.objectContaining({
+                    id: createdEvent2.id,
+                    name: createdEvent2.name,
+                    counts: {
+                        '2021-01-02': 1,
+                        '2021-01-03': 2,
+                    },
+                    totalCount: 3,
+                }),
             ]),
         );
     });
@@ -148,7 +164,15 @@ describe('AppService', () => {
 
         expect(registeredEvents).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ id: createdEvent2.id, count: 2, name: createdEvent2.name }),
+                expect.objectContaining({
+                    id: createdEvent2.id,
+                    name: createdEvent2.name,
+                    counts: {
+                        '2021-01-02': 1,
+                        '2021-01-03': 1,
+                    },
+                    totalCount: 2,
+                }),
             ]),
         );
     });

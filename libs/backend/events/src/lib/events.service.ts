@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateEventDto, PeriodEvent, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
+import { CreateEventDto, DATE_FORMAT, PeriodEvent, RegisterEventDto, TrackableEvent } from '@tracelytics/shared/types';
 import { uuid } from '@tracelytics/shared/utils';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Model } from 'mongoose';
 import { EventAlreadyExistsError, EventNotFoundError } from './errors';
 import { RegisteredEvent } from './registered-event.schema';
@@ -33,7 +33,7 @@ export class EventsService {
     }
 
     async getRegisteredEventsFromPeriod(startDate: Dayjs, endDate: Dayjs): Promise<PeriodEvent[]> {
-        const events = await this.registeredEventModel.aggregate([
+        const rawEvents: { _id: string; dates: string[] }[] = await this.registeredEventModel.aggregate([
             {
                 $match: {
                     timestamp: {
@@ -45,21 +45,29 @@ export class EventsService {
             {
                 $group: {
                     _id: '$trackableEventId',
-                    count: { $sum: 1 },
+                    dates: {
+                        $push: '$timestamp',
+                    },
                 },
             },
         ]);
+
+        const events = rawEvents.map(({ _id, dates }) => {
+            const counts = dates.reduce((acc, date) => {
+                const dateStr = dayjs(date).format(DATE_FORMAT);
+                acc[dateStr] = acc[dateStr] ? acc[dateStr] + 1 : 1;
+                return acc;
+            }, {} as Record<string, number>);
+
+            return { id: _id, counts, totalCount: dates.length };
+        });
 
         const trackableEvents = (await this.findAll()).reduce((acc, event) => {
             acc.set(event.id, event.name);
             return acc;
         }, new Map<string, string>());
 
-        return events.map(event => ({
-            id: event._id,
-            count: event.count,
-            name: trackableEvents.get(event._id) as string,
-        }));
+        return events.map(event => ({ ...event, name: trackableEvents.get(event.id) as string }));
     }
 
     private _find(query: { id: string } | { name: string }): Promise<TrackableEvent | null> {
