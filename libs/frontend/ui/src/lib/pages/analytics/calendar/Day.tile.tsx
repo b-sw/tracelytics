@@ -31,8 +31,7 @@ export const DayTile = ({ date }: Props) => {
 
     return (
         <Flex
-            px={7}
-            py={2}
+            p={1}
             rounded={'full'}
             alignItems={'center'}
             bgColor={bgColor}
