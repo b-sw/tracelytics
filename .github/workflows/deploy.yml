@@ -40,6 +40,6 @@ jobs:
           script: |
             docker stop $(docker ps -a -q --filter ancestor=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }})
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}
-            docker run -e MONGO_DB_HOST='${{ secrets.MONGO_DB_HOST }}' -e MONGO_DB_NAME='${{ secrets.MONGO_DB_NAME }}' -e MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}' -e MONGO_DB_HOST='${{ secrets.MONGO_DB_HOST }}' -e MONGO_DB_PORT=${{ secrets.MONGO_DB_PORT }} -d -p 3333:3333 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}
+            docker run -e MONGO_DB_HOST='${{ secrets.MONGO_DB_HOST }}' -e MONGO_DB_NAME='${{ secrets.MONGO_DB_NAME }}' -e MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}' -e MONGO_DB_HOST='${{ secrets.MONGO_DB_HOST }}' -e MONGO_DB_PORT=${{ secrets.MONGO_DB_PORT }} -d -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}
             docker container prune --force
             docker image prune --all --force

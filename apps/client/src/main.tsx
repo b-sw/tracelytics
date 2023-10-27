@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom/client';
 
 import { App } from './app/app';
 
-axios.defaults.baseURL = 'http://localhost:3000/api/';
+axios.defaults.baseURL = 'https://tracelytics.toadres.pl/';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
